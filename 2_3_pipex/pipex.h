@@ -6,7 +6,7 @@
 /*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/15 12:14:30 by sdg               #+#    #+#             */
-/*   Updated: 2023/06/15 22:57:26 by sdg              ###   ########.fr       */
+/*   Updated: 2023/06/16 22:56:56 by sdg              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@
 # include <fcntl.h>
 # include <sys/wait.h>
 # include <stdlib.h>
-# include "get_next_line.h"
 # include "libft.h"
 
 typedef struct s_file_info
@@ -32,6 +31,12 @@ typedef struct s_file_info
 void	rw_open_file(char *filename, int creat_flag, t_file_info *file_unfo);
 void	pipe_read_end(int *pipe_fd1, char *cmd, int infile_fd, char **envp);
 void	pipe_write_end(int *pipe_fd2, char *cmd, int outfile_fd, char **envp);
-char *cmd_path_find(char *cmd, char **envp);
+char	*cmd_path_find(char *cmd, char **envp);
+void	read_end_child(int *pipe_fd1, int infile_fd, char *cmd, char **envp);
+void	write_end_child(int *pipe_fd2, char *cmd, char **envp);
+void	read_end_redi(int infile_fd, int *pipe_fd1);
+void	write_end_redi(int outfile_fd);
+char	**exec_arg_set(char **cmd_s);
+
 
 #endif

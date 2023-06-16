@@ -6,7 +6,7 @@
 /*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:41:52 by sdg               #+#    #+#             */
-/*   Updated: 2023/06/15 23:01:16 by sdg              ###   ########.fr       */
+/*   Updated: 2023/06/16 22:45:36 by sdg              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int	main(int argc, char **argv, char **envp)
 {
 	int			pipe_fd1[2];
 	int			pipe_fd2[2];
-	t_file_info	file_unfo;
+	t_file_info	file_info;
 
 	if (argc != 5)
 	{
@@ -69,169 +69,59 @@ int	main(int argc, char **argv, char **envp)
 	}
 	pipe(pipe_fd1);
 	pipe(pipe_fd2);
-	rw_open_file(argv[1], O_RDONLY, &file_unfo);
-	if (dup2(pipe_fd1[0], STDIN_FD) == -1)
-	{
-		perror("Failed to execute dup2.");
-		exit(1);
-	}
-	pipe_read_end(pipe_fd1, argv[2], file_unfo.fd, envp);
-	if (file_unfo.empty)
+	rw_open_file(argv[1], O_RDONLY, &file_info);
+	pipe_read_end(pipe_fd1, argv[2], file_info.fd, envp);
+	if (file_info.empty)
 		unlink(argv[1]);
-	rw_open_file(argv[4], O_WRONLY | O_CREAT | O_TRUNC, &file_unfo);
-	if (dup2(file_unfo.fd, STDOUT_FD) == -1)
-	{
-		perror("Failed to execute dup2.");
-		exit(1);
-	}
-	pipe_write_end(pipe_fd2, argv[3], file_unfo.fd, envp);	
+	rw_open_file(argv[4], O_WRONLY | O_CREAT | O_TRUNC, &file_info);
+	pipe_write_end(pipe_fd2, argv[3], file_info.fd, envp);
 	return (0);
 }
 
-void	pipe_read_end(int *pipe_fd1, char *cmd, int infile_fd, char **envp)
+char	*cmd_path_find(char *cmd, char **envp)
 {
-	pid_t	pid;
-	char	**exec_arg;
-	char	**cmd_s;
+	char	**env_pt;
+	char	**res1;
+	char	**res2;
+	int		i;
+	char	*cmd_path;
 
-	pid = fork();
-	if (pid < 0)
+	env_pt = envp;
+	while (*env_pt)
 	{
-		perror("Failed to fork.");
-		exit(1);
+		res1 = ft_split(*(env_pt++), '=');
+		if (!ft_strncmp(res1[0], "PATH", 4))
+		{
+			res2 = ft_split(res1[1], ':');
+			i = 0;
+			while (res2[i])
+			{
+				cmd_path = ft_strjoin(res2[i++], cmd);
+				if (access(cmd_path, X_OK) != -1)
+					return (cmd_path);
+			}
+			free(res2);
+			free(res1);
+		}
 	}
-	if (pid == 0)
-	{
-		close(pipe_fd1[0]);
-		if (dup2(infile_fd, STDIN_FD) == -1)
-		{
-			perror("Failed to execute dup2.");
-			exit(1);
-		}
-		if (dup2(pipe_fd1[1], STDOUT_FD) == -1)
-		{
-			perror("Failed to execute dup2.");
-			exit(1);
-		}
-		cmd_s = ft_split(cmd, ' ');
-		if (!cmd_s)
-			exit(1);
-		exec_arg = (char **)malloc(sizeof(char *) * (2 + 1));
-		exec_arg[0] = cmd_s[0];
-		exec_arg[1] = cmd_s[1];
-		exec_arg[2] = 0;
-		close(pipe_fd1[1]);
-		char *cmd_path = cmd_path_find(exec_arg[0], envp);
-		if(!cmd_path)
-		{
-			perror("Failed to find command path.");
-			exit(1);
-		}
-		if (execve(cmd_path, exec_arg, envp) == -1)
-		{
-			perror("Failed to execute execve.");
-			exit(1);
-		}
-		perror("Failed to execute 'read end' side command.");
-		exit(1);
-	}
-	else
-	{
-		wait(0);
-		close(pipe_fd1[1]);
-		close(pipe_fd1[0]);
-		close(infile_fd);
-	}
+	return (0);
 }
 
-void	pipe_write_end(int *pipe_fd2, char *cmd, int outfile_fd, char **envp)
+void	rw_open_file(char *filename, int flag, t_file_info *file_info)
 {
-	pid_t	pid;
-	char	**exec_arg;
-	char	**cmd_s;
-
-	pid = fork();
-	if (pid < 0)
-	{
-		perror("Failed to fork.");
-		exit(1);
-	}
-	if (pid == 0)
-	{
-		close(pipe_fd2[0]);
-		cmd_s = ft_split(cmd, ' ');
-		if (!cmd_s)
-			exit(1);
-		exec_arg = (char **)malloc(sizeof(char *) * (2 + 1));
-		exec_arg[0] = cmd_s[0];
-		exec_arg[1] = cmd_s[1];
-		exec_arg[2] = 0;
-		close(pipe_fd2[1]);
-		char *cmd_path = cmd_path_find(exec_arg[0], envp);
-		if(!cmd_path)
-		{
-			perror("Failed to find command path.");
-			exit(1);
-		}
-		if (execve(cmd_path, exec_arg, envp) == -1)
-		{
-			perror("Failed to execute execve.");
-			exit(1);
-		}
-		perror("Failed to execute 'read end' side command.");
-		exit(1);
-	}
-	else
-	{
-		wait(0);
-		close(pipe_fd2[1]);
-		close(pipe_fd2[0]);
-		close(outfile_fd);
-	}
-}
-
-void	rw_open_file(char *filename, int flag, t_file_info *file_unfo)
-{
-	file_unfo->fd = open(filename, flag, 0777);
-	file_unfo->empty = 0;
-	if (file_unfo->fd == -1)
+	file_info->fd = open(filename, flag, 0777);
+	file_info->empty = 0;
+	if (file_info->fd == -1)
 	{
 		perror("Failed to open file.");
 		if (flag == O_RDONLY)
 		{
-			file_unfo->fd = open(filename, O_RDONLY | O_CREAT, 0777);
-			file_unfo->empty = 1;
-			if (file_unfo->fd == -1)
+			file_info->fd = open(filename, O_RDONLY | O_CREAT, 0777);
+			file_info->empty = 1;
+			if (file_info->fd == -1)
 				exit(1);
 		}
 		else
 			exit(1);
 	}
-}
-
-char *cmd_path_find(char *cmd, char **envp)
-{
-	char **env_pt;
-	env_pt = envp;
-	while (*env_pt)
-	{
-		char **res = ft_split(*env_pt, '=');
-		if(!ft_strncmp(res[0], "PATH", 4))
-		{
-			char **res2 = ft_split(res[1], ':');
-			// res2를 순회하며 cmd_path 실행가능여부확인
-			int i = 0;
-			while(res2[i])
-			{
-				cmd = ft_strjoin("/", cmd);
-				char *cmd_path = ft_strjoin(res2[i++], cmd);
-				if (access(cmd_path, X_OK) != -1)
-				{
-					return (cmd_path);
-				}
-			}
-		}
-		env_pt++;
-	}
-	return (0);
 }

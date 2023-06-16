@@ -1,18 +1,75 @@
-static void	pipe_write_end(char **av, char **envp)
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pipe_write_end.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/06/16 22:18:37 by sdg               #+#    #+#             */
+/*   Updated: 2023/06/16 22:56:24 by sdg              ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "pipex.h"
+
+
+void	pipe_write_end(int *pipe_fd2, char *cmd, int outfile_fd, char **envp)
 {
 	pid_t	pid;
-	int		outfile;
+	char	**exec_arg;
+	char	**cmd_s;
+	char	*cmd_path;
 
+	write_end_redi(outfile_fd);
 	pid = fork();
-	if (pid == -1)
-		perror_exit("fork error");
-	if (pid == 0)
+	if (pid < 0)
 	{
-		outfile = open(av[4], O_RDWR | O_CREAT | O_TRUNC, 0644);
-		if (outfile == -1)
-			perror_exit("outfile error");
-		if (dup2(outfile, STDOUT_FILENO) == -1)
-			perror_exit("dup2 error");
-		execute(av[3], envp);
+		perror("Failed to fork.");
+		exit(1);
 	}
+	if (pid == 0)
+		write_end_child(pipe_fd2, cmd, envp);
+	else
+	{
+		wait(0);
+		close(pipe_fd2[1]);
+		close(pipe_fd2[0]);
+		close(outfile_fd);
+	}
+}
+
+void	write_end_redi(int outfile_fd)
+{
+	if (dup2(outfile_fd, STDOUT_FD) == -1)
+	{
+		perror("Failed to execute dup2.");
+		exit(1);
+	}
+}
+
+void	write_end_child(int *pipe_fd2, char *cmd, char **envp)
+{
+	char	**cmd_s;
+	char	*cmd_path;
+	char	**exec_arg;
+
+	close(pipe_fd2[0]);
+	cmd_s = ft_split(cmd, ' ');
+	if (!cmd_s)
+		exit(1);
+	exec_arg = exec_arg_set(cmd_s);
+	cmd_path = cmd_path_find(exec_arg[0], envp);
+	if (!cmd_path)
+	{
+		perror("Failed to find command path.");
+		exit(1);
+	}
+	close(pipe_fd2[1]);
+	if (execve(cmd_path, exec_arg, envp) == -1)
+	{
+		perror("Failed to execute execve.");
+		exit(1);
+	}
+	perror("Failed to execute 'read end' side command.");
+	exit(1);
 }

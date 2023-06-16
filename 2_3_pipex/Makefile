@@ -6,14 +6,9 @@ NAME = pipex
 # BONUS_NAME = pipex_bonus
 
 LIBFT = ./libft/libft.a
-GNL_PATH = gnl
-GNL_SRC = get_next_line.c get_next_line_utils.c
-GNL_SRCS = $(addprefix $(GNL_PATH)/, $(GNL_SRC))
-GNL_HEADER = get_next_line.h
-GNL_HEADERS = $(addprefix $(GNL_PATH)/, $(GNL_HEADER))
 
-HEADERS = pipex.h $(GNL_HEADERS)
-SRCS = pipex.c $(GNL_SRCS)
+HEADERS = pipex.h
+SRCS = pipex.c pipe_read_end.c pipe_write_end.c
 # SRCS = test.c
 OBJS = $(SRCS:.c=.o)
 
