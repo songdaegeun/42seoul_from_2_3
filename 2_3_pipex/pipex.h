@@ -6,13 +6,13 @@
 /*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/15 12:14:30 by sdg               #+#    #+#             */
-/*   Updated: 2023/06/17 12:52:15 by sdg              ###   ########.fr       */
+/*   Updated: 2023/06/17 16:14:21 by sdg              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PIPEX_H
 # define PIPEX_H
-# define BUFFER_SIZE 1024
+# define BUFFER_SIZE 1048576
 # define STDOUT_FD 1
 # define STDIN_FD 0
 # include <unistd.h>
@@ -40,7 +40,9 @@ char	**exec_arg_set(char **cmd_s);
 void	pipe_middle(char *cmd, char **envp);
 void	pipe_middle_child(int *pipe, char *cmd, char **envp);
 void pipe_middle_child_redi(int *pipe);
-
-
+void	pipe_middle_heredoc(char *cmd, int heredoc, char **envp);
+void	pipe_middle_heredoc_child(int *pipe_fd, char *cmd, int heredoc, char **envp);
+void	pipe_middle_heredoc_redi(int *pipe_fd, int heredoc);
+int	ft_split_len(char **cmd_s);
 
 #endif

@@ -1,3 +1,10 @@
 abc
 a
 b
+5
+6
+7
+8
+9
+./pipex test.txt "ls -l" "wc -l" res1.txt
+./pipex test.txt "sed -n '3,7p'" "wc -l" res1.txt

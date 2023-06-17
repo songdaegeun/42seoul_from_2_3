@@ -6,7 +6,7 @@
 /*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 22:34:21 by sdg               #+#    #+#             */
-/*   Updated: 2023/06/17 13:03:44 by sdg              ###   ########.fr       */
+/*   Updated: 2023/06/17 16:25:08 by sdg              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,8 @@ char	**exec_arg_set(char **cmd_s)
 	char	**exec_arg;
 	int		i;
 
-	exec_arg = (char **)malloc(sizeof(char *) * (2 + 1));
+	// cmd_s의 양끝이 안닫혔으면, heredoc
+	exec_arg = (char **)malloc(sizeof(char *) * (ft_split_len(cmd_s) + 1));
 	if (!exec_arg)
 	{
 		perror("Failed to memory allocation.");
@@ -97,7 +98,7 @@ char	**exec_arg_set(char **cmd_s)
 	exec_arg[0] = ft_strjoin("/", cmd_s[0]);
 	free(cmd_s[0]);
 	i = 1;
-	while(cmd_s[i])
+	while (cmd_s[i])
 	{
 		exec_arg[i] = cmd_s[i];
 		i++;

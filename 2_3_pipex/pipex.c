@@ -6,7 +6,7 @@
 /*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:41:52 by sdg               #+#    #+#             */
-/*   Updated: 2023/06/17 13:19:16 by sdg              ###   ########.fr       */
+/*   Updated: 2023/06/17 16:20:27 by sdg              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,9 @@ pipe_write_end를 fork하고 pipex에서 기다리는 과정도 위와 유사하
 
 ./pipex here_doc LIMITER cmd cmd1 file
 cmd << LIMITER | cmd1 >> file
+
+ls << LIMMITER | grep a >> res3.txt 
+
 */
 
 #include "pipex.h"
@@ -69,8 +72,12 @@ int	main(int argc, char **argv, char **envp)
 {
 	int			pipe_fd1[2];
 	int			pipe_fd2[2];
+	char		buffer[BUFFER_SIZE];
 	t_file_info	file_info;
+	int			read_len;
 
+	pipe(pipe_fd1);
+	pipe(pipe_fd2);
 	if (argc < 5)
 	{
 		write(1, "Format error!\n", 14);
@@ -78,12 +85,21 @@ int	main(int argc, char **argv, char **envp)
 	}
 	else if (argc == 6 && !ft_strncmp(argv[1], "here_doc", 8))
 	{
-		;
+		rw_open_file("heredoc", O_WRONLY | O_CREAT | O_TRUNC, &file_info);
+		write(1, "pipe heredoc> ", 14);
+		read_len = read(STDIN_FD, buffer, BUFFER_SIZE);
+		while (ft_strncmp(buffer, argv[2], 7))
+		{
+			write(file_info.fd, buffer, read_len);
+			write(1, "pipe heredoc> ", 14);
+			read_len = read(STDIN_FD, buffer, BUFFER_SIZE);
+		}
+		pipe_middle_heredoc(argv[3], file_info.fd, envp);
+		rw_open_file(argv[argc - 1], O_WRONLY | O_CREAT | O_APPEND, &file_info);
+		pipe_write_end(pipe_fd2, argv[argc - 2], file_info.fd, envp);
 	}
 	else
 	{
-		pipe(pipe_fd1);
-		pipe(pipe_fd2);
 		rw_open_file(argv[1], O_RDONLY, &file_info);
 		pipe_read_end(pipe_fd1, argv[2], file_info.fd, envp);
 		if (file_info.empty)
@@ -100,7 +116,6 @@ int	main(int argc, char **argv, char **envp)
 	}
 	return (0);
 }
-
 
 char	*cmd_path_find(char *cmd, char **envp)
 {
@@ -148,4 +163,14 @@ void	rw_open_file(char *filename, int flag, t_file_info *file_info)
 		else
 			exit(1);
 	}
+}
+
+int	ft_split_len(char **cmd_s)
+{
+	int	i;
+
+	i = 0;
+	while (cmd_s[i])
+		i++;
+	return (i);
 }

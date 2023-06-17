@@ -8,7 +8,7 @@ NAME = pipex
 LIBFT = ./libft/libft.a
 
 HEADERS = pipex.h
-SRCS = pipex.c pipe_read_end.c pipe_write_end.c pipe_middle.c
+SRCS = pipex.c pipe_read_end.c pipe_write_end.c pipe_middle.c pipe_middle_heredoc.c
 # SRCS = test.c
 OBJS = $(SRCS:.c=.o)
 

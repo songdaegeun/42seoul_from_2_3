@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipe_middle.c                                      :+:      :+:    :+:   */
+/*   pipe_middle_heredoc.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/17 12:49:21 by sdg               #+#    #+#             */
-/*   Updated: 2023/06/17 14:46:07 by sdg              ###   ########.fr       */
+/*   Created: 2023/06/17 14:46:29 by sdg               #+#    #+#             */
+/*   Updated: 2023/06/17 16:19:59 by sdg              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	pipe_middle(char *cmd, char **envp)
+void	pipe_middle_heredoc(char *cmd, int heredoc, char **envp)
 {
 	int		pipe_fd[2];
 	pid_t	pid;
@@ -21,7 +21,7 @@ void	pipe_middle(char *cmd, char **envp)
 	char	*cmd_path;
 
 	pipe(pipe_fd);
-	if (dup2(STDIN_FD, pipe_fd[0]) == -1)
+	if (dup2(pipe_fd[0], STDIN_FD) == -1)
 	{
 		perror("Failed to execute dup2.");
 		exit(1);
@@ -33,7 +33,7 @@ void	pipe_middle(char *cmd, char **envp)
 		exit(1);
 	}
 	if (pid == 0)
-		pipe_middle_child(pipe_fd, cmd, envp);
+		pipe_middle_heredoc_child(pipe_fd, cmd, heredoc, envp);
 	else
 	{
 		wait(0);
@@ -42,14 +42,15 @@ void	pipe_middle(char *cmd, char **envp)
 	}
 }
 
-void	pipe_middle_child(int *pipe_fd, char *cmd, char **envp)
+void	pipe_middle_heredoc_child(int *pipe_fd, char *cmd, int heredoc, char **envp)
 {
 	char	**cmd_s;
 	char	*cmd_path;
 	char	**exec_arg;
 
 	close(pipe_fd[0]);
-	pipe_middle_child_redi(pipe_fd);
+	pipe_middle_heredoc_redi(pipe_fd, heredoc);
+	unlink("heredoc");
 	cmd_s = ft_split(cmd, ' ');
 	if (!cmd_s)
 		exit(1);
@@ -70,8 +71,13 @@ void	pipe_middle_child(int *pipe_fd, char *cmd, char **envp)
 	exit(1);
 }
 
-void	pipe_middle_child_redi(int *pipe_fd)
+void	pipe_middle_heredoc_redi(int *pipe_fd, int heredoc)
 {
+	if (dup2(heredoc, STDIN_FD) == -1)
+	{
+		perror("Failed to execute dup2.");
+		exit(1);
+	}
 	if (dup2(pipe_fd[1], STDOUT_FD) == -1)
 	{
 		perror("Failed to execute dup2.");
