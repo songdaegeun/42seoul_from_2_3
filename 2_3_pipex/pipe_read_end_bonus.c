@@ -1,23 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipe_middle.c                                      :+:      :+:    :+:   */
+/*   pipe_read_end_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/17 12:49:21 by sdg               #+#    #+#             */
-/*   Updated: 2023/06/17 21:50:38 by sdg              ###   ########.fr       */
+/*   Created: 2023/06/16 22:34:21 by sdg               #+#    #+#             */
+/*   Updated: 2023/06/17 22:11:01 by sdg              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "pipex_bonus.h"
 
-void	pipe_middle(char *cmd, char **envp)
+void	pipe_read_end(int *pipe_fd1, char *cmd, int infile_fd, char **envp)
 {
-	int		pipe_fd[2];
 	pid_t	pid;
 
-	pipe(pipe_fd);
 	pid = fork();
 	if (pid < 0)
 	{
@@ -25,27 +23,28 @@ void	pipe_middle(char *cmd, char **envp)
 		exit(1);
 	}
 	if (pid == 0)
-		pipe_middle_child(pipe_fd, cmd, envp);
+		read_end_child(pipe_fd1, infile_fd, cmd, envp);
 	else
 	{
-		if (dup2(pipe_fd[0], STDIN_FD) == -1)
+		if (dup2(pipe_fd1[0], STDIN_FD) == -1)
 		{
 			perror("Failed to execute dup2.");
 			exit(1);
 		}
-		close(pipe_fd[1]);
-		close(pipe_fd[0]);
+		close(pipe_fd1[1]);
+		close(pipe_fd1[0]);
+		close(infile_fd);
 	}
 }
 
-void	pipe_middle_child(int *pipe_fd, char *cmd, char **envp)
+void	read_end_child(int *pipe_fd1, int infile_fd, char *cmd, char **envp)
 {
 	char	**cmd_s;
 	char	*cmd_path;
 	char	**exec_arg;
 
-	close(pipe_fd[0]);
-	pipe_middle_child_redi(pipe_fd);
+	close(pipe_fd1[0]);
+	read_end_child_redi(infile_fd, pipe_fd1);
 	cmd_s = ft_split(cmd, ' ');
 	if (!cmd_s)
 		exit(1);
@@ -65,11 +64,39 @@ void	pipe_middle_child(int *pipe_fd, char *cmd, char **envp)
 	exit(1);
 }
 
-void	pipe_middle_child_redi(int *pipe_fd)
+void	read_end_child_redi(int infile_fd, int *pipe_fd1)
 {
-	if (dup2(pipe_fd[1], STDOUT_FD) == -1)
+	if (dup2(infile_fd, STDIN_FD) == -1)
 	{
 		perror("Failed to execute dup2.");
 		exit(1);
 	}
+	if (dup2(pipe_fd1[1], STDOUT_FD) == -1)
+	{
+		perror("Failed to execute dup2.");
+		exit(1);
+	}
+}
+
+char	**exec_arg_set(char **cmd_s)
+{
+	char	**exec_arg;
+	int		i;
+
+	exec_arg = (char **)malloc(sizeof(char *) * (ft_split_len(cmd_s) + 1));
+	if (!exec_arg)
+	{
+		perror("Failed to memory allocation.");
+		exit(1);
+	}
+	exec_arg[0] = ft_strjoin("/", cmd_s[0]);
+	free(cmd_s[0]);
+	i = 1;
+	while (cmd_s[i])
+	{
+		exec_arg[i] = cmd_s[i];
+		i++;
+	}
+	exec_arg[i] = 0;
+	return (exec_arg);
 }

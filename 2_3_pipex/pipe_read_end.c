@@ -6,7 +6,7 @@
 /*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 22:34:21 by sdg               #+#    #+#             */
-/*   Updated: 2023/06/17 19:45:40 by sdg              ###   ########.fr       */
+/*   Updated: 2023/06/17 21:36:18 by sdg              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,6 @@ void	pipe_read_end(int *pipe_fd1, char *cmd, int infile_fd, char **envp)
 {
 	pid_t	pid;
 
-	if (dup2(pipe_fd1[0], STDIN_FD) == -1)
-	{
-		perror("Failed to execute dup2.");
-		exit(1);
-	}
 	pid = fork();
 	if (pid < 0)
 	{
@@ -31,7 +26,11 @@ void	pipe_read_end(int *pipe_fd1, char *cmd, int infile_fd, char **envp)
 		read_end_child(pipe_fd1, infile_fd, cmd, envp);
 	else
 	{
-		wait(0);
+		if (dup2(pipe_fd1[0], STDIN_FD) == -1)
+		{
+			perror("Failed to execute dup2.");
+			exit(1);
+		}
 		close(pipe_fd1[1]);
 		close(pipe_fd1[0]);
 		close(infile_fd);
@@ -56,7 +55,6 @@ void	read_end_child(int *pipe_fd1, int infile_fd, char *cmd, char **envp)
 		perror("Failed to find command path.");
 		exit(1);
 	}
-	close(pipe_fd1[1]);
 	if (execve(cmd_path, exec_arg, envp) == -1)
 	{
 		perror("Failed to execute execve.");
