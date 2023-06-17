@@ -6,7 +6,7 @@
 /*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/15 12:14:30 by sdg               #+#    #+#             */
-/*   Updated: 2023/06/16 22:56:56 by sdg              ###   ########.fr       */
+/*   Updated: 2023/06/17 12:52:15 by sdg              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,13 @@ void	pipe_write_end(int *pipe_fd2, char *cmd, int outfile_fd, char **envp);
 char	*cmd_path_find(char *cmd, char **envp);
 void	read_end_child(int *pipe_fd1, int infile_fd, char *cmd, char **envp);
 void	write_end_child(int *pipe_fd2, char *cmd, char **envp);
-void	read_end_redi(int infile_fd, int *pipe_fd1);
-void	write_end_redi(int outfile_fd);
+void	read_end_child_redi(int infile_fd, int *pipe_fd1);
+void	write_end_parent_redi(int outfile_fd);
 char	**exec_arg_set(char **cmd_s);
+void	pipe_middle(char *cmd, char **envp);
+void	pipe_middle_child(int *pipe, char *cmd, char **envp);
+void pipe_middle_child_redi(int *pipe);
+
 
 
 #endif

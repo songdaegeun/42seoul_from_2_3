@@ -1,25 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipe_write_end.c                                   :+:      :+:    :+:   */
+/*   pipe_middle.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/16 22:18:37 by sdg               #+#    #+#             */
-/*   Updated: 2023/06/17 12:28:25 by sdg              ###   ########.fr       */
+/*   Created: 2023/06/17 12:49:21 by sdg               #+#    #+#             */
+/*   Updated: 2023/06/17 13:11:06 by sdg              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	pipe_write_end(int *pipe_fd2, char *cmd, int outfile_fd, char **envp)
+void	pipe_middle(char *cmd, char **envp)
 {
+	int		pipe_fd[2];
 	pid_t	pid;
 	char	**exec_arg;
 	char	**cmd_s;
 	char	*cmd_path;
 
-	write_end_parent_redi(outfile_fd);
+	pipe(pipe_fd);
+	if (dup2(STDIN_FD, pipe_fd[0]) == -1)
+	{
+		perror("Failed to execute dup2.");
+		exit(1);
+	}
 	pid = fork();
 	if (pid < 0)
 	{
@@ -27,32 +33,23 @@ void	pipe_write_end(int *pipe_fd2, char *cmd, int outfile_fd, char **envp)
 		exit(1);
 	}
 	if (pid == 0)
-		write_end_child(pipe_fd2, cmd, envp);
+		pipe_middle_child(pipe_fd, cmd, envp);
 	else
 	{
 		wait(0);
-		close(pipe_fd2[1]);
-		close(pipe_fd2[0]);
-		close(outfile_fd);
+		close(pipe_fd[1]);
+		close(pipe_fd[0]);
 	}
 }
 
-void	write_end_parent_redi(int outfile_fd)
-{
-	if (dup2(outfile_fd, STDOUT_FD) == -1)
-	{
-		perror("Failed to execute dup2.");
-		exit(1);
-	}
-}
-
-void	write_end_child(int *pipe_fd2, char *cmd, char **envp)
+void	pipe_middle_child(int *pipe_fd, char *cmd, char **envp)
 {
 	char	**cmd_s;
 	char	*cmd_path;
 	char	**exec_arg;
 
-	close(pipe_fd2[0]);
+	close(pipe_fd[0]);
+	pipe_middle_child_redi(pipe_fd);
 	cmd_s = ft_split(cmd, ' ');
 	if (!cmd_s)
 		exit(1);
@@ -63,7 +60,7 @@ void	write_end_child(int *pipe_fd2, char *cmd, char **envp)
 		perror("Failed to find command path.");
 		exit(1);
 	}
-	close(pipe_fd2[1]);
+	close(pipe_fd[1]);
 	if (execve(cmd_path, exec_arg, envp) == -1)
 	{
 		perror("Failed to execute execve.");
@@ -71,4 +68,13 @@ void	write_end_child(int *pipe_fd2, char *cmd, char **envp)
 	}
 	perror("Failed to execute 'read end' side command.");
 	exit(1);
+}
+
+void	pipe_middle_child_redi(int *pipe_fd)
+{
+	if (dup2(pipe_fd[1], STDOUT_FD) == -1)
+	{
+		perror("Failed to execute dup2.");
+		exit(1);
+	}
 }

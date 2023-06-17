@@ -6,7 +6,7 @@
 /*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 22:34:21 by sdg               #+#    #+#             */
-/*   Updated: 2023/06/16 22:49:10 by sdg              ###   ########.fr       */
+/*   Updated: 2023/06/17 13:03:44 by sdg              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	read_end_child(int *pipe_fd1, int infile_fd, char *cmd, char **envp)
 	char	**exec_arg;
 
 	close(pipe_fd1[0]);
-	read_end_redi(infile_fd, pipe_fd1);
+	read_end_child_redi(infile_fd, pipe_fd1);
 	cmd_s = ft_split(cmd, ' ');
 	if (!cmd_s)
 		exit(1);
@@ -69,7 +69,7 @@ void	read_end_child(int *pipe_fd1, int infile_fd, char *cmd, char **envp)
 	exit(1);
 }
 
-void	read_end_redi(int infile_fd, int *pipe_fd1)
+void	read_end_child_redi(int infile_fd, int *pipe_fd1)
 {
 	if (dup2(infile_fd, STDIN_FD) == -1)
 	{
@@ -86,6 +86,7 @@ void	read_end_redi(int infile_fd, int *pipe_fd1)
 char	**exec_arg_set(char **cmd_s)
 {
 	char	**exec_arg;
+	int		i;
 
 	exec_arg = (char **)malloc(sizeof(char *) * (2 + 1));
 	if (!exec_arg)
@@ -95,7 +96,12 @@ char	**exec_arg_set(char **cmd_s)
 	}
 	exec_arg[0] = ft_strjoin("/", cmd_s[0]);
 	free(cmd_s[0]);
-	exec_arg[1] = cmd_s[1];
-	exec_arg[2] = 0;
+	i = 1;
+	while(cmd_s[i])
+	{
+		exec_arg[i] = cmd_s[i];
+		i++;
+	}
+	exec_arg[i] = 0;
 	return (exec_arg);
 }

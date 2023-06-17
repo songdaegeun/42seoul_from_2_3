@@ -6,10 +6,11 @@
 /*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:41:52 by sdg               #+#    #+#             */
-/*   Updated: 2023/06/16 22:45:36 by sdg              ###   ########.fr       */
+/*   Updated: 2023/06/17 13:19:16 by sdg              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+/*
 // ./pipex file1 cmd1 cmd2 file2
 
 //  ./pipex test.txt "ls -l" "wc -l" res1.txt
@@ -19,6 +20,7 @@
 // < test.txt grep a | wc -w > res2.txt
 // ./pipex test1.txt "grep a" "wc -w" res1.txt
 // < test1.txt grep a | wc -w > res2.txt
+*/
 /*
 sudo:
 pipe operator의 read end와 write end 각각의 명령을 실행할 프로세스는 2개 필요하다.
@@ -53,6 +55,13 @@ pipe_write_end에서 cmd2를 실행할 준비는 끝났다.
 
 pipe_write_end를 fork하고 pipex에서 기다리는 과정도 위와 유사하다.
 */
+/*
+./pipex file1 cmd1 cmd2 cmd3 ... cmdn file2
+< file1 cmd1 | cmd2 | cmd3 ... | cmdn > file2
+
+./pipex here_doc LIMITER cmd cmd1 file
+cmd << LIMITER | cmd1 >> file
+*/
 
 #include "pipex.h"
 
@@ -62,21 +71,36 @@ int	main(int argc, char **argv, char **envp)
 	int			pipe_fd2[2];
 	t_file_info	file_info;
 
-	if (argc != 5)
+	if (argc < 5)
 	{
 		write(1, "Format error!\n", 14);
 		exit(1);
 	}
-	pipe(pipe_fd1);
-	pipe(pipe_fd2);
-	rw_open_file(argv[1], O_RDONLY, &file_info);
-	pipe_read_end(pipe_fd1, argv[2], file_info.fd, envp);
-	if (file_info.empty)
-		unlink(argv[1]);
-	rw_open_file(argv[4], O_WRONLY | O_CREAT | O_TRUNC, &file_info);
-	pipe_write_end(pipe_fd2, argv[3], file_info.fd, envp);
+	else if (argc == 6 && !ft_strncmp(argv[1], "here_doc", 8))
+	{
+		;
+	}
+	else
+	{
+		pipe(pipe_fd1);
+		pipe(pipe_fd2);
+		rw_open_file(argv[1], O_RDONLY, &file_info);
+		pipe_read_end(pipe_fd1, argv[2], file_info.fd, envp);
+		if (file_info.empty)
+			unlink(argv[1]);
+		if (argc > 5)
+		{
+			for (int i = 0; i < argc - 5; i++)
+			{
+				pipe_middle(argv[3 + i], envp);
+			}
+		}
+		rw_open_file(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, &file_info);
+		pipe_write_end(pipe_fd2, argv[argc - 2], file_info.fd, envp);
+	}
 	return (0);
 }
+
 
 char	*cmd_path_find(char *cmd, char **envp)
 {
