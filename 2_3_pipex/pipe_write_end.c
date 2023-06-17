@@ -6,7 +6,7 @@
 /*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 22:18:37 by sdg               #+#    #+#             */
-/*   Updated: 2023/06/17 15:38:22 by sdg              ###   ########.fr       */
+/*   Updated: 2023/06/17 19:45:49 by sdg              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,6 @@
 void	pipe_write_end(int *pipe_fd2, char *cmd, int outfile_fd, char **envp)
 {
 	pid_t	pid;
-	char	**exec_arg;
-	char	**cmd_s;
-	char	*cmd_path;
 
 	write_end_parent_redi(outfile_fd);
 	pid = fork();

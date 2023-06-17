@@ -1,31 +1,45 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipe_middle_heredoc.c                              :+:      :+:    :+:   */
+/*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 14:46:29 by sdg               #+#    #+#             */
-/*   Updated: 2023/06/17 17:38:13 by sdg              ###   ########.fr       */
+/*   Updated: 2023/06/17 19:46:04 by sdg              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
+void	heredoc(int argc, char **argv, t_file_info *file_info, char **envp)
+{
+	int		pipe_fd[2];
+	int		read_len;
+	char	buffer[BUFFER_SIZE];
+
+	pipe(pipe_fd);
+	rw_open_file("heredoc", O_WRONLY | O_CREAT | O_TRUNC, file_info);
+	write(1, "pipe heredoc> ", 14);
+	read_len = read(STDIN_FD, buffer, BUFFER_SIZE);
+	while (ft_strncmp(buffer, argv[2], 7))
+	{
+		write(file_info->fd, buffer, read_len);
+		write(1, "pipe heredoc> ", 14);
+		read_len = read(STDIN_FD, buffer, BUFFER_SIZE);
+	}
+	pipe_middle_heredoc(argv[3], file_info->fd, envp);
+	rw_open_file(argv[argc - 1], O_WRONLY | O_CREAT | O_APPEND, file_info);
+	pipe_write_end(pipe_fd, argv[argc - 2], file_info->fd, envp);
+}
+
 void	pipe_middle_heredoc(char *cmd, int heredoc, char **envp)
 {
 	int		pipe_fd[2];
 	pid_t	pid;
-	char	**exec_arg;
-	char	**cmd_s;
-	char	*cmd_path;
 
 	pipe(pipe_fd);
-	if (dup2(pipe_fd[0], STDIN_FD) == -1)
-	{
-		perror("Failed to execute dup2.");
-		exit(1);
-	}
+	heredoc_redi(pipe_fd);
 	pid = fork();
 	if (pid < 0)
 	{
@@ -42,7 +56,8 @@ void	pipe_middle_heredoc(char *cmd, int heredoc, char **envp)
 	}
 }
 
-void	pipe_middle_heredoc_child(int *pipe_fd, char *cmd, int heredoc, char **envp)
+void	pipe_middle_heredoc_child(int *pipe_fd, \
+char *cmd, int heredoc, char **envp)
 {
 	char	**cmd_s;
 	char	*cmd_path;
@@ -50,22 +65,10 @@ void	pipe_middle_heredoc_child(int *pipe_fd, char *cmd, int heredoc, char **envp
 
 	close(pipe_fd[0]);
 	pipe_middle_heredoc_redi(pipe_fd, heredoc);
-	unlink("heredoc");
 	cmd_s = ft_split(cmd, ' ');
 	if (!cmd_s)
 		exit(1);
 	exec_arg = exec_arg_set(cmd_s);
-	// 각 cmd_s[i]에 대해 할 것
-	// quote 제거 필요. quote(' or ") 쌍이 맞으면 null값 대입, 쌍이 안맞으면 quote(heredoc)
-	
-	// 쌍이 안맞아서 임시파일을 사용하는 경우:
-	// 1,2번째 인수, 즉 cmd_s[0,1]의 경우 명령어와 옵션인데(옵션이 없는 경우도 고려해야함), 이것은 read는 따로하지만 '\n'도 포함해서 연결한다.
-	// 나머지 2개는 임시파일에 읽은 것들을 '\n'기준으로 나눠서 주어진 명령어와 옵션에 대해 thread로 돌린다(예시1의 결과를 보면 3,7p인자와 p인자의 결과가 섞여나오는 걸로 보아
-	// thread인 것으로 보임. 사실 확인 필요.)
-
-	// 예시1.
-	// 2_3_pipex % < test.txt sed -n '3,7p 
-	// quote> p'
 	cmd_path = cmd_path_find(exec_arg[0], envp);
 	if (!cmd_path)
 	{
@@ -89,7 +92,17 @@ void	pipe_middle_heredoc_redi(int *pipe_fd, int heredoc)
 		perror("Failed to execute dup2.");
 		exit(1);
 	}
+	unlink("heredoc");
 	if (dup2(pipe_fd[1], STDOUT_FD) == -1)
+	{
+		perror("Failed to execute dup2.");
+		exit(1);
+	}
+}
+
+void	heredoc_redi(int *pipe_fd)
+{
+	if (dup2(pipe_fd[0], STDIN_FD) == -1)
 	{
 		perror("Failed to execute dup2.");
 		exit(1);

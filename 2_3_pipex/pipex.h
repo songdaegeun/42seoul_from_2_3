@@ -6,7 +6,7 @@
 /*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/15 12:14:30 by sdg               #+#    #+#             */
-/*   Updated: 2023/06/17 16:14:21 by sdg              ###   ########.fr       */
+/*   Updated: 2023/06/17 19:44:56 by sdg              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,14 @@ void	write_end_parent_redi(int outfile_fd);
 char	**exec_arg_set(char **cmd_s);
 void	pipe_middle(char *cmd, char **envp);
 void	pipe_middle_child(int *pipe, char *cmd, char **envp);
-void pipe_middle_child_redi(int *pipe);
+void	pipe_middle_child_redi(int *pipe);
 void	pipe_middle_heredoc(char *cmd, int heredoc, char **envp);
-void	pipe_middle_heredoc_child(int *pipe_fd, char *cmd, int heredoc, char **envp);
+void	pipe_middle_heredoc_child(int *pipe_fd, char *cmd, \
+int heredoc, char **envp);
 void	pipe_middle_heredoc_redi(int *pipe_fd, int heredoc);
-int	ft_split_len(char **cmd_s);
+int		ft_split_len(char **cmd_s);
+void	heredoc_redi(int *pipe_fd);
+void	heredoc(int argc, char **argv, t_file_info *file_info, char **envp);
+void	redirection(int argc, char **argv, t_file_info *file_info, char **envp);
 
 #endif

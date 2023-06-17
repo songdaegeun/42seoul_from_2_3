@@ -6,7 +6,7 @@
 /*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 22:34:21 by sdg               #+#    #+#             */
-/*   Updated: 2023/06/17 16:39:06 by sdg              ###   ########.fr       */
+/*   Updated: 2023/06/17 19:45:40 by sdg              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,6 @@
 void	pipe_read_end(int *pipe_fd1, char *cmd, int infile_fd, char **envp)
 {
 	pid_t	pid;
-	char	**exec_arg;
-	char	**cmd_s;
-	char	*cmd_path;
 
 	if (dup2(pipe_fd1[0], STDIN_FD) == -1)
 	{

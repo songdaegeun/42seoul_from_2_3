@@ -6,7 +6,7 @@
 /*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 12:49:21 by sdg               #+#    #+#             */
-/*   Updated: 2023/06/17 14:46:07 by sdg              ###   ########.fr       */
+/*   Updated: 2023/06/17 19:45:56 by sdg              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,6 @@ void	pipe_middle(char *cmd, char **envp)
 {
 	int		pipe_fd[2];
 	pid_t	pid;
-	char	**exec_arg;
-	char	**cmd_s;
-	char	*cmd_path;
 
 	pipe(pipe_fd);
 	if (dup2(STDIN_FD, pipe_fd[0]) == -1)

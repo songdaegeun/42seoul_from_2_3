@@ -1,6 +1,5 @@
 CC=	cc
-CFLAGS =
-# CFLAGS =	-Wall -Wextra -Werror
+CFLAGS =	-Wall -Wextra -Werror
 
 NAME = pipex
 # BONUS_NAME = pipex_bonus
@@ -8,8 +7,7 @@ NAME = pipex
 LIBFT = ./libft/libft.a
 
 HEADERS = pipex.h
-SRCS = pipex.c pipe_read_end.c pipe_write_end.c pipe_middle.c pipe_middle_heredoc.c
-# SRCS = test.c
+SRCS = pipex.c pipe_read_end.c pipe_write_end.c pipe_middle.c heredoc.c
 OBJS = $(SRCS:.c=.o)
 
 # BONUS_HEADERS =  $(SPRINTF_HEADERS)
