@@ -6,7 +6,7 @@
 /*   By: dasong <dasong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 14:46:29 by sdg               #+#    #+#             */
-/*   Updated: 2023/06/20 14:27:57 by dasong           ###   ########.fr       */
+/*   Updated: 2023/06/20 15:02:34 by dasong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	heredoc(int argc, char **argv, t_file_info *file_info, char **envp)
 	int		read_len;
 	char	buffer[BUFFER_SIZE];
 
-	rw_open_file("heredoc", O_RDWR | O_CREAT | O_TRUNC, file_info);
+	rw_open_file("heredoc", O_RDWR | O_CREAT, file_info);
 	write(1, "pipe heredoc> ", 14);
 	read_len = read(STDIN_FD, buffer, BUFFER_SIZE);
 	while (ft_strncmp(buffer, argv[2], 7))
@@ -26,6 +26,8 @@ void	heredoc(int argc, char **argv, t_file_info *file_info, char **envp)
 		write(1, "pipe heredoc> ", 14);
 		read_len = read(STDIN_FD, buffer, BUFFER_SIZE);
 	}
+	close(file_info->fd);
+	rw_open_file("heredoc", O_RDWR | O_CREAT, file_info);
 	pipe_middle_heredoc(argv[3], file_info->fd, envp);
 	unlink("heredoc");
 	rw_open_file(argv[argc - 1], O_WRONLY | O_CREAT | O_APPEND, file_info);
