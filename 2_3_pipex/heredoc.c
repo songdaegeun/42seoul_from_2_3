@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: dasong <dasong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 14:46:29 by sdg               #+#    #+#             */
-/*   Updated: 2023/06/17 21:50:02 by sdg              ###   ########.fr       */
+/*   Updated: 2023/06/20 14:27:57 by dasong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,10 @@
 
 void	heredoc(int argc, char **argv, t_file_info *file_info, char **envp)
 {
-	int		pipe_fd[2];
 	int		read_len;
 	char	buffer[BUFFER_SIZE];
 
-	pipe(pipe_fd);
-	rw_open_file("heredoc", O_WRONLY | O_CREAT | O_TRUNC, file_info);
+	rw_open_file("heredoc", O_RDWR | O_CREAT | O_TRUNC, file_info);
 	write(1, "pipe heredoc> ", 14);
 	read_len = read(STDIN_FD, buffer, BUFFER_SIZE);
 	while (ft_strncmp(buffer, argv[2], 7))
@@ -29,9 +27,9 @@ void	heredoc(int argc, char **argv, t_file_info *file_info, char **envp)
 		read_len = read(STDIN_FD, buffer, BUFFER_SIZE);
 	}
 	pipe_middle_heredoc(argv[3], file_info->fd, envp);
+	unlink("heredoc");
 	rw_open_file(argv[argc - 1], O_WRONLY | O_CREAT | O_APPEND, file_info);
 	pipe_write_end(argv[argc - 2], file_info->fd, envp);
-	unlink("heredoc");
 }
 
 void	pipe_middle_heredoc(char *cmd, int heredoc, char **envp)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: dasong <dasong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:41:52 by sdg               #+#    #+#             */
-/*   Updated: 2023/06/17 21:43:24 by sdg              ###   ########.fr       */
+/*   Updated: 2023/06/20 14:26:59 by dasong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,8 @@
 
 int	main(int argc, char **argv, char **envp)
 {
-	int			pipe_fd1[2];
-	int			pipe_fd2[2];
 	t_file_info	file_info;
 
-	pipe(pipe_fd1);
-	pipe(pipe_fd2);
 	if (argc < 5)
 	{
 		write(1, "Format error!\n", 14);
