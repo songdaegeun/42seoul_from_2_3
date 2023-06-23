@@ -6,7 +6,7 @@
 /*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 22:18:37 by sdg               #+#    #+#             */
-/*   Updated: 2023/06/17 21:42:29 by sdg              ###   ########.fr       */
+/*   Updated: 2023/06/24 00:16:09 by sdg              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ void	pipe_write_end(char *cmd, int outfile_fd, char **envp)
 	pid_t	pid;
 
 	pid = fork();
+	printf("%d", getpid());
 	if (pid < 0)
 	{
 		perror("Failed to fork.");
@@ -26,7 +27,7 @@ void	pipe_write_end(char *cmd, int outfile_fd, char **envp)
 		write_end_child(cmd, outfile_fd, envp);
 	else
 	{
-		wait(0);
+		waitpid(pid, 0, 0);
 		close(outfile_fd);
 	}
 }
