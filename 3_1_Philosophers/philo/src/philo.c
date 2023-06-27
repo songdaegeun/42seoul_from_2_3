@@ -14,60 +14,153 @@
 
 #include "philo.h"
 
-void error_exit(const char *str) {
-    printf(str);
-    exit(1);
-}
-void init(int argc, char **argv, t_philo_info *philo_info) {
-    philo_info->num_of_philo = ft_atoi(argv[1]);
-    philo_info->time_to_die = ft_atoi(argv[2]);
-    philo_info->time_to_eat = ft_atoi(argv[3]);
-    philo_info->time_to_sleep = ft_atoi(argv[4]);
+int init(int argc, char **argv, t_rule_info *rule_info) {
+    struct timeval mytime;
+    gettimeofday(&mytime, 0);
+    rule_info->start_time = mytime.tv_usec / 1000;
+    rule_info->num_of_philo = ft_atoi(argv[1]);
+    rule_info->time_to_die = ft_atoi(argv[2]);
+    rule_info->time_to_eat = ft_atoi(argv[3]);
+    rule_info->time_to_sleep = ft_atoi(argv[4]);
     if(argc == 6) {
-        philo_info->min_times_eat = ft_atoi(argv[5]);
+        rule_info->min_times_eat = ft_atoi(argv[5]);
+        if(rule_info->min_times_eat < 0) {
+            return (2);
+        }
     }
-    philo_state *state = (philo_state *)malloc(num_of_philo * sizeof(philo_state));
-    if(!state) {
-        error_exit("memory allocation fail\n");
-    }
-    pthread_cond_t *cond_vars = (pthread_cond_t *)malloc(num_of_philo * sizeof(pthread_cond_t));
-    if(!cond_vars) {
-        error_exit("memory allocation fail\n");
+    if (rule_info->num_of_philo <= 0 || rule_info->time_to_die < 0 || rule_info->time_to_eat < 0 || rule_info->time_to_sleep < 0)
+	{
+		return (2);
+	}
+   
+    // mutex_lock초기화해야함
+    // pthread_mutex_t = mutex_lock;    
+    return (0);
+}
+
+int philo_init(t_rule_info *rule_info, t_philo_info **philo_info)
+{
+    *philo_info = (t_philo_info *)malloc(num_of_philo * sizeof(t_philo_info));
+    if(!*philo_info) {
+        printf("memory allocation fail\n");
+        return (1);
     }
 
     for (int i = 0; i < num_of_philo; i++)
     {
-        state[i] = THINK;
+		(*philo_info)[i].id = i;
+		(*philo_info)[i].left_id = i;
+		(*philo_info)[i].right_id = (i + 1) % rule_info->philo_num;
+		(*philo_info)[i].prev_eat_start_time = 0;
+		(*philo_info)[i].cnt_eat = 0;
+		i++;
     }
-
-    pthread_mutex_t = mutex_lock;
-
+    
 }
 
 int main(int argc, char **argv)
 {
+    int errno;
+    t_rule_info rule_info;
+    t_philo_info *philo_info;
+
     if (!(argc == 5 || argc == 6)) {
-        error_exit("format error\n");
+        printf("format error\n");
+        return (0);
     }
-    t_philo_info philo_info;
-    pthread_t = tid;
-    init(argc, argv, &philo_info);
-    for (size_t i = 0; i < count; i++)
-    {
-        tid
-        // philo thread create 
-    }
-    for (size_t i = 0; i < count; i++)
-    {
-        // philo thread join
-    }
+
     
-    
-    // getFork();
-    // eating();
-    // putFork();
-    // sleeping();
-    // thinking();
+    errno = rule_init(argc, argv, &rule_info);
+    if (errno) {
+        printf("[%d]error\n", errno);
+        return (0);
+    }
+    errno = philo_init(&rule_info, &philo_info);
+    if (errno) {
+        printf("[%d]error\n", errno);
+        return (0);
+    }
+    simul_start();
 
     return (0);
 }
+
+void simul_start(t_rule_info rule_info, t_philo_info *philo_info) {
+    pthread_t = tid;
+
+    for (int i = 0; i < philo_info.num_of_philo; i++)
+    {
+        pthread_create(&tid, 0, philo_thread, (void *)&(philo_info[i]));
+    }
+
+    for (int i = 0; i < philo_info.num_of_philo; i++)
+    {
+        pthread_join(tid, 0);
+    }
+
+}
+
+
+// void	*ft_thread(void *argv)
+// {
+// 	t_arg		*arg;
+// 	t_philo		*philo;
+
+// 	philo = argv;
+// 	arg = philo->arg;
+// 	if (philo->id % 2)
+// 		usleep(1000);
+// 	while (!arg->finish)
+// 	{
+// 		ft_philo_action(arg, philo);
+// 		if (arg->eat_times == philo->eat_count)
+// 		{
+// 			arg->finished_eat++;
+// 			break ;
+// 		}
+// 		ft_philo_printf(arg, philo->id, "is sleeping");
+// 		ft_pass_time((long long)arg->time_to_sleep, arg);
+// 		ft_philo_printf(arg, philo->id, "is thinking");
+// 	}
+// 	return (0);
+// }
+
+
+void *philo_thread(void *init_param) {
+
+
+    while(1) {
+        philo_act();
+    }
+    
+}
+
+
+
+// // timestamp_in_ms X died
+
+// void thinking() {
+//     printf("%d %d is thinking\n", timestamp_in_ms, id);
+// }
+
+// void eating() {
+//     printf("%d %d is eating\n", timestamp_in_ms, id);
+// }
+
+// void sleeping() {
+//     printf("%d %d is sleeping\n", timestamp_in_ms, id);
+// }
+
+// void getFork() {
+//     // left_getFork
+//     // right_getFork
+// }
+
+
+// void left_getFork() {
+//     printf("%d %d has taken a fork\n", timestamp_in_ms, id);
+// }
+
+// void right_getFork() {
+//     printf("%d %d has taken a fork\n", timestamp_in_ms, id);
+// }
