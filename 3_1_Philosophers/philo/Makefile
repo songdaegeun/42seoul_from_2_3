@@ -4,7 +4,7 @@ CFLAGS = -Wall -Wextra -Werror
 NAME = philo
 BONUS_NAME = philo_bonus
 
-# LIBFT = ./libft/libft.a
+LIBFT = ./libft/libft.a
 HEADER = philo.h
 HEADERS = $(addprefix include/, $(HEADER))
 
@@ -21,28 +21,29 @@ OBJS = $(SRCS:.c=.o)
 all: $(NAME)
 bonus: $(BONUS_NAME)
 
-$(NAME): $(OBJS)
-	$(CC) $(CFLAGS) -Iinclude -o $@ $(OBJS);
-# -Iphilo/include
+$(NAME): $(OBJS) $(LIBFT)
+	$(CC) $(CFLAGS) -Llibft -lft -Iinclude -o $@ $(OBJS);
 
 # $(BONUS_NAME): $(BONUS_OBJS)
 # 	$(CC) $(CFLAGS) -Llibft -lft -o $@ $(BONUS_OBJS);\
 
-# $(LIBFT): libft.h
-# 	$(MAKE) -C ./libft all
+$(LIBFT): ./include/libft.h
+	$(MAKE) -C ./libft all
 
 $(OBJS): %.o: %.c $(HEADERS)
-	$(CC) $(CFLAGS) -o $@ -c $<
+	$(CC) $(CFLAGS) -Iinclude -o $@ -c $<
 
 # $(BONUS_OBJS): %.o: %.c $(BONUS_HEADERS)
 # 	$(CC) $(CFLAGS) -o $@ -c $<
 
 clean:
-	@rm -f $(OBJS)
-	@rm -f $(BONUS_OBJS)
+	rm -f $(OBJS)
+	rm -f $(BONUS_OBJS)
+	$(MAKE) -C ./libft clean
 
 fclean: clean
-	@rm -f $(NAME)
-	@rm -f $(BONUS_NAME)
+	rm -f $(NAME)
+	rm -f $(BONUS_NAME)
+	$(MAKE) -C ./libft fclean
 
 re: fclean all

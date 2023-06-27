@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasong <dasong@student.42.fr>              +#+  +:+       +#+        */
+/*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/23 14:03:15 by dasong            #+#    #+#             */
-/*   Updated: 2023/06/23 14:03:19 by dasong           ###   ########.fr       */
+/*   Updated: 2023/06/27 18:22:23 by sdg              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,12 @@
 
 #ifndef PHILO_H
 # define PHILO_H
+#include <libft.h>
 #include <stdio.h>
 #include <pthread.h>
 #include <unistd.h>
+#include <sys/time.h>
+
 typedef enum {
     THINK,
     EAT,
