@@ -6,7 +6,7 @@
 /*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/23 14:06:19 by dasong            #+#    #+#             */
-/*   Updated: 2023/06/27 20:58:22 by sdg              ###   ########.fr       */
+/*   Updated: 2023/06/27 21:19:44 by sdg              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ int	philo_init(t_rule_info *rule_info, t_philo_info **philo_info)
 		(*philo_info)[i].right_id = (i + 1) % rule_info->num_of_philo;
 		(*philo_info)[i].prev_eat_start_time = 0;
 		(*philo_info)[i].cnt_eat = 0;
+		(*philo_info)[i].rule = rule_info;
 		i++;
 	}
 	return (0);
@@ -107,93 +108,12 @@ int	main(int argc, char **argv)
 		printf("[%d]error\n", errno);
 		return (0);
 	}
-	simul_start(&rule_info, philo_info);
+	errno = simul_start(&rule_info, philo_info);
+	if (errno)
+	{
+		printf("[%d]error\n", errno);
+		return (0);
+	}
 	return (0);
 }
 
-
-// int	ft_philo_start(t_arg *arg, t_philo *philo)
-// {
-// 	int		i;
-
-// 	i = 0;
-// 	while (i < arg->philo_num)
-// 	{	
-// 		philo[i].last_eat_time = ft_get_time();
-// 		if (pthread_create(&(philo[i].thread), NULL, ft_thread, &(philo[i])))
-// 			return (1);
-// 		i++;
-// 	}
-// 	ft_philo_check_finish(arg, philo);
-// 	i = 0;
-// 	while (i < arg->philo_num)
-// 		pthread_join(philo[i++].thread, NULL);
-// // 조인을 안하면 프로그램이 먼저 종료되서 쓰레드가 진행되지 않는다.
-// 	ft_free_thread(arg, philo);
-// 	return (0);
-// }
-
-
-// void	*ft_thread(void *argv)
-// {
-// 	t_arg		*arg;
-// 	t_philo		*philo;
-
-// 	philo = argv;
-// 	arg = philo->arg;
-// 	if (philo->id % 2)
-// 		usleep(1000);
-// 	while (!arg->finish)
-// 	{
-// 		ft_philo_action(arg, philo);
-// 		if (arg->eat_times == philo->eat_count)
-// 		{
-// 			arg->finished_eat++;
-// 			break ;
-// 		}
-// 		ft_philo_printf(arg, philo->id, "is sleeping");
-// 		ft_pass_time((long long)arg->time_to_sleep, arg);
-// 		ft_philo_printf(arg, philo->id, "is thinking");
-// 	}
-// 	return (0);
-// }
-
-
-void	*philo_thread(void *init_param)
-{
-	t_philo_info	*philo_info;
-
-	philo_info = (t_philo_info *)init_param;
-    while (1)
-	{
-        philo_act();
-    }
-    
-}
-
-
-// void thinking() {
-//     printf("%d %d is thinking\n", timestamp_in_ms, id);
-// }
-
-// void eating() {
-//     printf("%d %d is eating\n", timestamp_in_ms, id);
-// }
-
-// void sleeping() {
-//     printf("%d %d is sleeping\n", timestamp_in_ms, id);
-// }
-
-// void getFork() {
-//     // left_getFork
-//     // right_getFork
-// }
-
-
-// void left_getFork() {
-//     printf("%d %d has taken a fork\n", timestamp_in_ms, id);
-// }
-
-// void right_getFork() {
-//     printf("%d %d has taken a fork\n", timestamp_in_ms, id);
-// }

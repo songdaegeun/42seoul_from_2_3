@@ -6,7 +6,7 @@
 /*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/23 14:03:15 by dasong            #+#    #+#             */
-/*   Updated: 2023/06/27 20:56:07 by sdg              ###   ########.fr       */
+/*   Updated: 2023/06/27 21:16:26 by sdg              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@ typedef struct s_philo_info {
 	int	right_id;
 	int	prev_eat_start_time;
 	int	cnt_eat;
+	pthread_t	tid;
+	t_rule_info	*rule;
 }	t_philo_info;
 
 #endif
