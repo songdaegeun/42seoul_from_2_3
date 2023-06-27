@@ -8,7 +8,7 @@ LIBFT = ./libft/libft.a
 HEADER = philo.h
 HEADERS = $(addprefix include/, $(HEADER))
 
-SRC = philo.c
+SRC = philo.c philo_act.c simul.c
 SRCS = $(addprefix src/, $(SRC))
 OBJS = $(SRCS:.c=.o)
 
