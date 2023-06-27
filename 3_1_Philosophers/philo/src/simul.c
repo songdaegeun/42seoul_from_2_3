@@ -1,25 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   simul.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/06/28 02:18:57 by sdg               #+#    #+#             */
+/*   Updated: 2023/06/28 02:24:26 by sdg              ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
-
-// int	ft_philo_start(t_arg *arg, t_philo *philo)
-// {
-// 	int		i;
-
-// 	i = 0;
-// 	while (i < arg->philo_num)
-// 	{	
-// 		philo[i].last_eat_time = ft_get_time();
-// 		if (pthread_create(&(philo[i].thread), NULL, ft_thread, &(philo[i])))
-// 			return (1);
-// 		i++;
-// 	}
-// 	ft_philo_check_finish(arg, philo);
-// 	i = 0;
-// 	while (i < arg->philo_num)
-// 		pthread_join(philo[i++].thread, NULL);
-// // 조인을 안하면 프로그램이 먼저 종료되서 쓰레드가 진행되지 않는다.
-// 	ft_free_thread(arg, philo);
-// 	return (0);
-// }
 
 int	simul_start(t_rule_info *rule_info, t_philo_info *philo_info)
 {
@@ -47,12 +38,27 @@ int	simul_start(t_rule_info *rule_info, t_philo_info *philo_info)
 	return (0);
 }
 
-void	mem_release(t_philo_info *philo_info, int i)
+void	*philo_thread(void *init_param)
 {
+	t_philo_info	*philo_info;
 	t_rule_info		*rule_info;
 
+	philo_info = (t_philo_info *)init_param;
 	rule_info = philo_info->rule;
-	pthread_mutex_destroy(&rule_info->mutex_forks[i]);
+	while (!rule_info->end_flag)
+	{
+		philo_eating(philo_info);
+		// philo가 식사한 횟수가 최소 식사횟수 조건에 도달하면 해당 philo는 종료조건 충족.
+		if (rule_info->min_times_eat == philo_info->cnt_eat)
+		{
+			rule_info->end_philo_cnt++;
+		}
+		philo_state_print(rule_info, philo_info->id, "sleeping");
+		// wait(rule_info->time_to_eat + rule_info->time_to_sleep, philo_info);
+		usleep(rule_info->time_to_sleep * 1000);
+		philo_state_print(rule_info, philo_info->id, "thinking");
+	}
+	return (0);
 }
 
 void	mornitoring(t_rule_info *rule_info, t_philo_info *philo_info)
@@ -77,34 +83,4 @@ void	mornitoring(t_rule_info *rule_info, t_philo_info *philo_info)
 		}
 		// usleep(10)?
 	}
-}
-
-void	*philo_thread(void *init_param)
-{
-	t_philo_info	*philo_info;
-	t_rule_info		*rule_info;
-
-	philo_info = (t_philo_info *)init_param;
-	rule_info = philo_info->rule;
-	while (!rule_info->end_flag)
-	{
-		philo_eating(philo_info);
-		// philo가 식사한 횟수가 최소 식사횟수 조건에 도달하면 해당 philo는 종료조건 충족.
-		if (rule_info->min_times_eat == philo_info->cnt_eat)
-		{
-			rule_info->end_philo_cnt++;
-		}
-		philo_state_print(rule_info, philo_info->id, "sleeping");
-		// wait(rule_info->time_to_eat + rule_info->time_to_sleep, philo_info);
-		usleep(rule_info->time_to_sleep * 1000);
-		philo_state_print(rule_info, philo_info->id, "thinking");
-	}
-}
-
-int	get_milli_time(void)
-{
-	struct timeval	mytime;
-
-	gettimeofday(&mytime, 0);
-	return (mytime.tv_usec / 1000);
 }
