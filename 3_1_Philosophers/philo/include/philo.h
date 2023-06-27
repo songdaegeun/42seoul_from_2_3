@@ -14,6 +14,21 @@
 
 #ifndef PHILO_H
 # define PHILO_H
+#include <stdio.h>
+#include <pthread.h>
 
+typedef enum {
+    THINK,
+    EAT,
+    SLEEP
+} philo_state;
+
+typedef struct s_philo_info {
+    int num_of_philo;
+    int time_to_die;
+    int time_to_eat;
+    int time_to_sleep;
+    int min_times_eat;
+}   t_philo_info;
 
 #endif
