@@ -6,7 +6,7 @@
 /*   By: dasong <dasong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/28 02:18:57 by sdg               #+#    #+#             */
-/*   Updated: 2023/06/28 19:04:04 by dasong           ###   ########.fr       */
+/*   Updated: 2023/06/28 19:31:22 by dasong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,19 +53,18 @@ void	*philo_thread(void *init_param)
 		{
 			rule_info->end_philo_cnt++;
 		}
-		philo_state_print(rule_info, philo_info->id, "sleeping");
+		philo_state_print(rule_info, philo_info->id, "is sleeping");
 		// wait(rule_info->time_to_eat + rule_info->time_to_sleep, philo_info);
 		usleep(rule_info->time_to_sleep * 1000);
-		philo_state_print(rule_info, philo_info->id, "thinking");
+		philo_state_print(rule_info, philo_info->id, "is thinking");
 	}
-	printf("[%d] endflag:%d\n", philo_info->id, rule_info->end_flag);
 	return (0);
 }
 
 void	mornitoring(t_rule_info *rule_info, t_philo_info *philo_info)
 {
-	int	i;
-	int	now;
+	int			i;
+	long long	now;
 
 	while (!rule_info->end_flag)
 	{
@@ -87,5 +86,5 @@ void	mornitoring(t_rule_info *rule_info, t_philo_info *philo_info)
 		}
 		// usleep(10)?
 	}
-	printf("monitoring end\n");
+	// printf("monitoring end\n");
 }
