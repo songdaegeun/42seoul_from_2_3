@@ -6,7 +6,7 @@
 /*   By: dasong <dasong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/28 02:21:18 by sdg               #+#    #+#             */
-/*   Updated: 2023/06/28 19:29:08 by dasong           ###   ########.fr       */
+/*   Updated: 2023/06/28 22:20:20 by dasong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,11 @@ void	philo_state_print(t_rule_info *rule_info, int id, const char*str)
 {
 	long long	time_stamp;
 
+	if (rule_info->end_flag == 1)
+		return ;
 	pthread_mutex_lock(&rule_info->mutex_print);
+	if (rule_info->end_flag == 1)
+		return ;
 	time_stamp = get_milli_time() - rule_info->start_time;
 	printf("%lld %d %s\n", time_stamp, id + 1, str);
 	pthread_mutex_unlock(&rule_info->mutex_print);
