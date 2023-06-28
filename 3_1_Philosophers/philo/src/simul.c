@@ -6,7 +6,7 @@
 /*   By: dasong <dasong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/28 02:18:57 by sdg               #+#    #+#             */
-/*   Updated: 2023/06/28 22:23:48 by dasong           ###   ########.fr       */
+/*   Updated: 2023/06/28 22:36:19 by dasong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	simul_start(t_rule_info *rule_info, t_philo_info *philo_info)
 	while (i < rule_info->num_of_philo) {
 		pthread_join(philo_info[i++].tid, 0);
 	}
-	printf("thread end\n");
+	// printf("thread end\n");
 	pthread_mutex_destroy(&rule_info->mutex_print);
 	i = -1;
 	while (++i < rule_info->num_of_philo)
@@ -50,8 +50,6 @@ void	*philo_thread(void *init_param)
 	while (!rule_info->end_flag)
 	{
 		philo_eating(philo_info);
-		if (rule_info->end_flag == 1)
-			break ;
 		// philo가 식사한 횟수가 최소 식사횟수 조건에 도달하면 해당 philo는 종료조건 충족.
 		if (rule_info->min_times_eat == philo_info->cnt_eat)
 		{
@@ -90,5 +88,5 @@ void	mornitoring(t_rule_info *rule_info, t_philo_info *philo_info)
 		}
 		usleep(10);
 	}
-	printf("monitoring end\n");
+	// printf("monitoring end\n");
 }
