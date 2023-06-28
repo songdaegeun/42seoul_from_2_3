@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   simul.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: dasong <dasong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/28 02:18:57 by sdg               #+#    #+#             */
-/*   Updated: 2023/06/28 02:24:26 by sdg              ###   ########.fr       */
+/*   Updated: 2023/06/28 18:45:00 by dasong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ void	*philo_thread(void *init_param)
 	rule_info = philo_info->rule;
 	while (!rule_info->end_flag)
 	{
+		printf("%d running..\n", philo_info->id);
 		philo_eating(philo_info);
 		// philo가 식사한 횟수가 최소 식사횟수 조건에 도달하면 해당 philo는 종료조건 충족.
 		if (rule_info->min_times_eat == philo_info->cnt_eat)

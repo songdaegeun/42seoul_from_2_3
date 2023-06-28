@@ -3,22 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   philo.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: dasong <dasong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/23 14:06:19 by dasong            #+#    #+#             */
-/*   Updated: 2023/06/28 02:20:56 by sdg              ###   ########.fr       */
+/*   Updated: 2023/06/28 18:31:44 by dasong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-// ./philo number_of_philosophers time_to_die time_to_eat time_to_sleep [number_of_times_each_philosopher_must_eat]
-// ./philo 5 1 1 1 1  
 
 #include "philo.h"
 
 int	main(int argc, char **argv)
 {
 	int				errno;
+	// stack영역에 있으며 여러 스레드가 접근할 것이다. 
+	// 하지만 read만 할거라서 lock을 걸 필요는 없다.
 	t_rule_info		rule_info;
+	// heap영역에 있으며 여러 스레드가 접근할 것이다. 
+	// read/write 할거라서 write하는 영역에 mutex lock을 걸 것이다.
 	t_philo_info	*philo_info;
 
 	if (!(argc == 5 || argc == 6))
@@ -109,7 +110,7 @@ int	philo_init(t_rule_info *rule_info, t_philo_info **philo_info)
 		(*philo_info)[i].id = i;
 		(*philo_info)[i].left_id = i;
 		(*philo_info)[i].right_id = (i + 1) % rule_info->num_of_philo;
-		(*philo_info)[i].prev_eat_start_time = 0;
+		(*philo_info)[i].prev_eat_start_time = rule_info->start_time;
 		(*philo_info)[i].cnt_eat = 0;
 		(*philo_info)[i].rule = rule_info;
 		i++;
