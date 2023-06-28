@@ -6,7 +6,7 @@
 /*   By: dasong <dasong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/28 02:18:57 by sdg               #+#    #+#             */
-/*   Updated: 2023/06/28 18:45:00 by dasong           ###   ########.fr       */
+/*   Updated: 2023/06/28 19:04:04 by dasong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ int	simul_start(t_rule_info *rule_info, t_philo_info *philo_info)
 	while (i < rule_info->num_of_philo)
 		pthread_join(philo_info[i++].tid, 0);
 	pthread_mutex_destroy(&rule_info->mutex_print);
-	i = 0;
-	while (i < rule_info->num_of_philo)
+	i = -1;
+	while (++i < rule_info->num_of_philo)
 		mem_release(&philo_info[i], i);
 	free(philo_info);
 	free(rule_info->mutex_forks);
@@ -47,7 +47,6 @@ void	*philo_thread(void *init_param)
 	rule_info = philo_info->rule;
 	while (!rule_info->end_flag)
 	{
-		printf("%d running..\n", philo_info->id);
 		philo_eating(philo_info);
 		// philo가 식사한 횟수가 최소 식사횟수 조건에 도달하면 해당 philo는 종료조건 충족.
 		if (rule_info->min_times_eat == philo_info->cnt_eat)
@@ -59,6 +58,7 @@ void	*philo_thread(void *init_param)
 		usleep(rule_info->time_to_sleep * 1000);
 		philo_state_print(rule_info, philo_info->id, "thinking");
 	}
+	printf("[%d] endflag:%d\n", philo_info->id, rule_info->end_flag);
 	return (0);
 }
 
@@ -69,8 +69,11 @@ void	mornitoring(t_rule_info *rule_info, t_philo_info *philo_info)
 
 	while (!rule_info->end_flag)
 	{
-		if (rule_info->min_times_eat != -1 && rule_info->num_of_philo == rule_info->end_philo_cnt)
+		if (rule_info->min_times_eat != -1 && rule_info->num_of_philo == rule_info->end_philo_cnt) {
+			// printf("everyone ate\n");
 			rule_info->end_flag = 1;
+		}
+			
 		i = 0;
 		while (i < rule_info->num_of_philo)
 		{
@@ -84,4 +87,5 @@ void	mornitoring(t_rule_info *rule_info, t_philo_info *philo_info)
 		}
 		// usleep(10)?
 	}
+	printf("monitoring end\n");
 }
