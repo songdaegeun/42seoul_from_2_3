@@ -6,7 +6,7 @@
 /*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/28 02:19:45 by sdg               #+#    #+#             */
-/*   Updated: 2023/06/30 21:55:12 by sdg              ###   ########.fr       */
+/*   Updated: 2023/06/30 23:33:30 by sdg              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,15 +28,12 @@ void	philo_eating(t_philo_info *philo_info)
 	{
 		pthread_mutex_lock(&rule_info->mutex_forks[philo_info->left_id]);
 		philo_state_print(rule_info, philo_info->id, "has taken a fork");
-		// philo_state_print(rule_info, philo_info->id, "has taken a left fork");
 		pthread_mutex_lock(&(rule_info->mutex_forks[philo_info->right_id]));
 		philo_state_print(rule_info, philo_info->id, "has taken a fork");
-		// philo_state_print(rule_info, philo_info->id, "has taken a right fork");
 		philo_state_print(rule_info, philo_info->id, "is eating");
 		philo_info->prev_eat_start_time = get_milli_time();
-		philo_info->cnt_eat++;
 		wait_duration(rule_info->time_to_eat, philo_info);
-		// usleep(rule_info->time_to_eat * 1000);
+		philo_info->cnt_eat++;
 		pthread_mutex_unlock(&rule_info->mutex_forks[philo_info->left_id]);
 		pthread_mutex_unlock(&(rule_info->mutex_forks[philo_info->right_id]));
 	}
@@ -44,15 +41,12 @@ void	philo_eating(t_philo_info *philo_info)
 	{
 		pthread_mutex_lock(&rule_info->mutex_forks[philo_info->right_id]);
 		philo_state_print(rule_info, philo_info->id, "has taken a fork");
-		// philo_state_print(rule_info, philo_info->id, "has taken a right fork");
 		pthread_mutex_lock(&(rule_info->mutex_forks[philo_info->left_id]));
 		philo_state_print(rule_info, philo_info->id, "has taken a fork");
-		// philo_state_print(rule_info, philo_info->id, "has taken a left fork");
 		philo_state_print(rule_info, philo_info->id, "is eating");
 		philo_info->prev_eat_start_time = get_milli_time();
-		philo_info->cnt_eat++;
 		wait_duration(rule_info->time_to_eat, philo_info);
-		// usleep(rule_info->time_to_eat * 1000);
+		philo_info->cnt_eat++;
 		pthread_mutex_unlock(&rule_info->mutex_forks[philo_info->right_id]);
 		pthread_mutex_unlock(&(rule_info->mutex_forks[philo_info->left_id]));
 	}

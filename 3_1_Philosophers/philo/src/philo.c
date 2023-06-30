@@ -6,7 +6,7 @@
 /*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/23 14:06:19 by dasong            #+#    #+#             */
-/*   Updated: 2023/06/30 20:00:45 by sdg              ###   ########.fr       */
+/*   Updated: 2023/06/30 23:33:04 by sdg              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,7 @@
 int	main(int argc, char **argv)
 {
 	int				errno;
-	// stack영역에 있으며 여러 스레드가 접근할 것이다. 
-	// 하지만 read만 할거라서 lock을 걸 필요는 없다.
 	t_rule_info		rule_info;
-	// heap영역에 있으며 여러 스레드가 접근할 것이다. 
-	// read/write 할거라서 write하는 영역에 mutex lock을 걸 것이다.
 	t_philo_info	*philo_info;
 
 	if (!(argc == 5 || argc == 6))
@@ -72,7 +68,7 @@ int	rule_init(int argc, char **argv, t_rule_info *rule_info)
 	errno = mutex_set(rule_info);
 	if (errno)
 		return (errno);
-    return (0);
+	return (0);
 }
 
 int	mutex_set(t_rule_info *rule_info)

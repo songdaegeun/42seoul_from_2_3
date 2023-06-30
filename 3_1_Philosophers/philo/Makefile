@@ -1,6 +1,5 @@
 CC=	cc
-CFLAGS = -Wall -Wextra -Werror -pthread
-# -fsanitize=thread
+CFLAGS = -Wall -Wextra -Werror -pthread 
 NAME = philo
 
 LIBFT = ./libft/libft.a
