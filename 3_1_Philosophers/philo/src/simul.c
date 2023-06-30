@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   simul.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasong <dasong@student.42.fr>              +#+  +:+       +#+        */
+/*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/28 02:18:57 by sdg               #+#    #+#             */
-/*   Updated: 2023/06/28 22:36:19 by dasong           ###   ########.fr       */
+/*   Updated: 2023/06/30 22:20:53 by sdg              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,6 @@ void	*philo_thread(void *init_param)
 		{
 			rule_info->end_philo_cnt++;
 		}
-		
 		philo_state_print(rule_info, philo_info->id, "is sleeping");
 		wait_duration(rule_info->time_to_eat + rule_info->time_to_sleep, philo_info);
 		// usleep(rule_info->time_to_sleep * 1000);
@@ -86,7 +85,7 @@ void	mornitoring(t_rule_info *rule_info, t_philo_info *philo_info)
 			}
 			i++;
 		}
-		usleep(10);
+		// usleep(1);
 	}
 	// printf("monitoring end\n");
 }
