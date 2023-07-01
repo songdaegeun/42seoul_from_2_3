@@ -6,20 +6,22 @@
 /*   By: dasong <dasong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/28 02:21:18 by sdg               #+#    #+#             */
-/*   Updated: 2023/06/28 22:30:31 by dasong           ###   ########.fr       */
+/*   Updated: 2023/07/01 22:48:39 by dasong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	philo_state_print(t_rule_info *rule_info, int id, const char*str)
+void	philo_state_print(t_rule_info *rule_info, int id, \
+const char*str, int flag)
 {
 	long long	time_stamp;
 
+	if (id < 0 || (rule_info->end_flag && flag == 0))
+		return ;
 	pthread_mutex_lock(&rule_info->mutex_print);
 	time_stamp = get_milli_time() - rule_info->start_time;
-	if (rule_info->end_flag != 1)
-		printf("%lld %d %s\n", time_stamp, id + 1, str);
+	printf("%lld %d %s\n", time_stamp, id + 1, str);
 	pthread_mutex_unlock(&rule_info->mutex_print);
 }
 

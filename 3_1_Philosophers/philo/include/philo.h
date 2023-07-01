@@ -6,7 +6,7 @@
 /*   By: dasong <dasong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/23 14:03:15 by dasong            #+#    #+#             */
-/*   Updated: 2023/07/01 15:43:42 by dasong           ###   ########.fr       */
+/*   Updated: 2023/07/01 22:48:07 by dasong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ typedef struct s_philo_info {
 	int			left_id;
 	int			right_id;
 	long long	prev_eat_start_time;
+	long long	prev_sleep_start_time;
 	int			cnt_eat;
 	pthread_t	tid;
 	t_rule_info	*rule;
@@ -47,10 +48,11 @@ int			mutex_set(t_rule_info *rule_info);
 int			philo_init(t_rule_info *rule_info, t_philo_info **philo_info);
 int			simul_start(t_rule_info *rule_info, t_philo_info *philo_info);
 void		*philo_thread(void *init_param);
-void		mornitoring(t_rule_info *rule_info, t_philo_info *philo_info);
+int			mornitoring(t_rule_info *rule_info, t_philo_info *philo_info);
 void		philo_eating(t_philo_info *philo_info);
-void		wait_duration(int duration, t_philo_info *philo_info);
-void		philo_state_print(t_rule_info *rule_info, int id, const char*str);
+void		wait_duration(int duration, t_philo_info *philo_info, int flag);
+void		philo_state_print(t_rule_info *rule_info, int id, \
+const char*str, int flag);
 long long	get_milli_time(void);
 void		mem_release(t_philo_info *philo_info, int i);
 void		even_eating(t_philo_info *philo_info);

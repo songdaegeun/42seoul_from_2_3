@@ -6,7 +6,7 @@
 /*   By: dasong <dasong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/28 02:18:57 by sdg               #+#    #+#             */
-/*   Updated: 2023/07/01 15:43:31 by dasong           ###   ########.fr       */
+/*   Updated: 2023/07/01 22:53:48 by dasong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 int	simul_start(t_rule_info *rule_info, t_philo_info *philo_info)
 {
 	int			i;
+	int			dead_id;
 
 	i = 0;
 	while (i < rule_info->num_of_philo)
@@ -24,12 +25,13 @@ int	simul_start(t_rule_info *rule_info, t_philo_info *philo_info)
 			return (4);
 		i++;
 	}
-	mornitoring(rule_info, philo_info);
+	dead_id = mornitoring(rule_info, philo_info);
 	i = 0;
 	while (i < rule_info->num_of_philo)
 	{
 		pthread_join(philo_info[i++].tid, 0);
 	}
+	philo_state_print(rule_info, dead_id, "died", 1);
 	pthread_mutex_destroy(&rule_info->mutex_print);
 	i = -1;
 	while (++i < rule_info->num_of_philo)
@@ -46,6 +48,8 @@ void	*philo_thread(void *init_param)
 
 	philo_info = (t_philo_info *)init_param;
 	rule_info = philo_info->rule;
+	if (philo_info->id % 2)
+		usleep(50);
 	while (!rule_info->end_flag)
 	{
 		philo_eating(philo_info);
@@ -53,15 +57,16 @@ void	*philo_thread(void *init_param)
 		{
 			rule_info->end_philo_cnt++;
 		}
-		philo_state_print(rule_info, philo_info->id, "is sleeping");
-		wait_duration(rule_info->time_to_eat + rule_info->time_to_sleep, \
-		philo_info);
-		philo_state_print(rule_info, philo_info->id, "is thinking");
+		philo_state_print(rule_info, philo_info->id, "is sleeping", 0);
+		philo_info->prev_sleep_start_time = get_milli_time();
+		wait_duration(rule_info->time_to_sleep, philo_info, 2);
+		philo_state_print(rule_info, philo_info->id, "is thinking", 0);
+		usleep(50);
 	}
 	return (0);
 }
 
-void	mornitoring(t_rule_info *rule_info, t_philo_info *philo_info)
+int	mornitoring(t_rule_info *rule_info, t_philo_info *philo_info)
 {
 	int			i;
 	long long	now;
@@ -72,18 +77,20 @@ void	mornitoring(t_rule_info *rule_info, t_philo_info *philo_info)
 		rule_info->end_philo_cnt)
 		{
 			rule_info->end_flag = 1;
+			return (-1);
 		}
-		i = 0;
-		while (i < rule_info->num_of_philo)
+		i = -1;
+		while (++i < rule_info->num_of_philo)
 		{
 			now = get_milli_time();
 			if ((now - philo_info[i].prev_eat_start_time) >= \
 			rule_info->time_to_die)
 			{
-				philo_state_print(rule_info, i, "died");
 				rule_info->end_flag = 1;
+				return (i);
 			}
-			i++;
 		}
+		usleep(2000);
 	}
+	return (-1);
 }
