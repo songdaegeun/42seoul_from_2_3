@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: dasong <dasong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/23 14:06:19 by dasong            #+#    #+#             */
-/*   Updated: 2023/06/30 23:33:04 by sdg              ###   ########.fr       */
+/*   Updated: 2023/07/01 14:10:52 by dasong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,19 +26,14 @@ int	main(int argc, char **argv)
 	errno = rule_init(argc, argv, &rule_info);
 	if (errno)
 	{
-		printf("[%d]error\n", errno);
+		if (errno != 5)
+			printf("[%d]error\n", errno);
 		return (0);
 	}
-	errno = philo_init(&rule_info, &philo_info);
-	if (errno)
+	if (philo_init(&rule_info, &philo_info) || \
+	simul_start(&rule_info, philo_info))
 	{
-		printf("[%d]error\n", errno);
-		return (0);
-	}
-	errno = simul_start(&rule_info, philo_info);
-	if (errno)
-	{
-		printf("[%d]error\n", errno);
+		printf("error\n");
 		return (0);
 	}
 	return (0);
@@ -61,6 +56,8 @@ int	rule_init(int argc, char **argv, t_rule_info *rule_info)
 		rule_info->min_times_eat = ft_atoi(argv[5]);
 		if (rule_info->min_times_eat < 0)
 			return (2);
+		else if (rule_info->min_times_eat == 0)
+			return (5);
 	}
 	if (rule_info->num_of_philo <= 0 || rule_info->time_to_die < 0 || \
 	rule_info->time_to_eat < 0 || rule_info->time_to_sleep < 0)
@@ -77,7 +74,8 @@ int	mutex_set(t_rule_info *rule_info)
 
 	if (pthread_mutex_init(&rule_info->mutex_print, 0) == -1)
 		return (3);
-	rule_info->mutex_forks = (pthread_mutex_t *)malloc(rule_info->num_of_philo * sizeof(pthread_mutex_t));
+	rule_info->mutex_forks = (pthread_mutex_t *)malloc(rule_info->num_of_philo \
+	* sizeof(pthread_mutex_t));
 	if (!rule_info->mutex_forks)
 		return (1);
 	i = 0;
@@ -94,7 +92,8 @@ int	philo_init(t_rule_info *rule_info, t_philo_info **philo_info)
 {
 	int	i;
 
-	*philo_info = (t_philo_info *)malloc(rule_info->num_of_philo * sizeof(t_philo_info));
+	*philo_info = (t_philo_info *)malloc(rule_info->num_of_philo * \
+	sizeof(t_philo_info));
 	if (!*philo_info)
 	{
 		printf("memory allocation fail\n");

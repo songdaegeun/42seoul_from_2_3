@@ -6,11 +6,9 @@
 /*   By: dasong <dasong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/23 14:03:15 by dasong            #+#    #+#             */
-/*   Updated: 2023/06/28 19:28:02 by dasong           ###   ########.fr       */
+/*   Updated: 2023/07/01 15:43:42 by dasong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-// ./philo number_of_philosophers time_to_die time_to_eat time_to_sleep [number_of_times_each_philosopher_must_eat]
 
 #ifndef PHILO_H
 # define PHILO_H
@@ -55,5 +53,7 @@ void		wait_duration(int duration, t_philo_info *philo_info);
 void		philo_state_print(t_rule_info *rule_info, int id, const char*str);
 long long	get_milli_time(void);
 void		mem_release(t_philo_info *philo_info, int i);
+void		even_eating(t_philo_info *philo_info);
+void		odd_eating(t_philo_info *philo_info);
 
 #endif

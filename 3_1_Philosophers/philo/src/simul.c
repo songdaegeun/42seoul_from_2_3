@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   simul.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: dasong <dasong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/28 02:18:57 by sdg               #+#    #+#             */
-/*   Updated: 2023/06/30 23:35:25 by sdg              ###   ########.fr       */
+/*   Updated: 2023/07/01 15:43:31 by dasong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,14 +68,17 @@ void	mornitoring(t_rule_info *rule_info, t_philo_info *philo_info)
 
 	while (!rule_info->end_flag)
 	{
-		if (rule_info->min_times_eat != -1 && rule_info->num_of_philo == rule_info->end_philo_cnt) {
+		if (rule_info->min_times_eat != -1 && rule_info->num_of_philo == \
+		rule_info->end_philo_cnt)
+		{
 			rule_info->end_flag = 1;
 		}
 		i = 0;
 		while (i < rule_info->num_of_philo)
 		{
 			now = get_milli_time();
-			if ((now - philo_info[i].prev_eat_start_time) >= rule_info->time_to_die)
+			if ((now - philo_info[i].prev_eat_start_time) >= \
+			rule_info->time_to_die)
 			{
 				philo_state_print(rule_info, i, "died");
 				rule_info->end_flag = 1;

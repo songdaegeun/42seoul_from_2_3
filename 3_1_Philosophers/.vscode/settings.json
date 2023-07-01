@@ -2,6 +2,10 @@
 	"files.associations": {
 		"philo.h": "c",
 		"time.h": "c",
-		"chrono": "c"
+		"chrono": "c",
+		"philo_bonus.h": "c",
+		"stat.h": "c",
+		"unistd.h": "c",
+		"semaphore.h": "c"
 	}
 }

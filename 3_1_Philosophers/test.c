@@ -1,45 +1,39 @@
 #include <stdio.h>
 #include <pthread.h>
 #include <stdlib.h>
+#include <semaphore.h>        
+#include <sys/mman.h>
+#include <unistd.h>
 
-// gcc는 일부 os에서 -pthread플래그 없이 pthread 라이브러리를 링크하도록 하고 있지만,
-// 명시적으로 표시해주는 것이 안전하다.
-// gcc test.c -pthread
-void *mythread(void *arg) {
-	int m = (int)(*(int*)arg);
-	printf("%d\n", m);
-	return (void *) ((int *)arg + 1);
-}
-
-void	assert(int cond)
+int main()
 {
-	if (!cond)
-	{
-		printf("assert error\n");
-		exit(1);
-	}
+  int fd, i=0,nloop=1000,zero=0,*ptr;
+  sem_t *mutex;
+
+  //파일을 열고 메모리와 매핑한다.
+  fd = open("log.txt",O_RDWR|O_CREAT,S_IRWXU);
+  write(fd,&zero,sizeof(int));
+  ptr = mmap(NULL,sizeof(int),PROT_READ|PROT_WRITE,MAP_SHARED,fd,0);
+  close(fd);
+  /* 세마포어를 생성화고 초기화 한다. */
+  if((mutex = sem_open("my_sem", O_CREAT|O_EXCL, 0000700, 1)) != SEM_FAILED)
+    {
+      perror("semaphore initilization");
+      exit(0);
+    }
+  if (fork() == 0) { /* child process*/
+    for (i = 0; i < nloop; i++) {
+      sem_wait(mutex);
+      printf("child: %d\n", (*ptr)++);
+      sem_post(mutex);
+    }
+    exit(0);
+  }
+  /* 부모 프로세스*/
+  for (i = 0; i < nloop; i++) {
+    sem_wait(mutex);
+    printf("parent: %d\n", (*ptr)++);
+    sem_post(mutex);
+  }
+  exit(0);
 }
-
-// void	my_pthread_mutex_init(pthread_mutex_t *mutex) {
-// 	int rc = pthread_mutex_init(&mutex, NULL);
-// 	assert(rc == 0);
-// }
-
-// void	my_pthread_mutex_lock(pthread_mutex_t *mutex) {
-// 	int rc = pthread_mutex_lock(mutex);
-// 	assert(rc == 0);
-// }
-
-// pthread_mutex_unlock(pthread_mutex_t *mutex);
-// pthread_mutex_destroy()
-
-int main(int argc, char *argv[]) {
-	pthread_t p;
-	int rc, m;
-	int data = 2;
-	pthread_create(&p, NULL, mythread, (void *) &data);
-	pthread_join(p, (void **) &m);
-	printf("returned %d\n", m);
-	return 0;
-}
-

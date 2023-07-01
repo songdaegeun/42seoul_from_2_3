@@ -10,10 +10,9 @@ SRC = philo.c simul.c philo_eating.c util.c
 SRCS = $(addprefix src/, $(SRC))
 OBJS = $(SRCS:.c=.o)
 
-.PHONY: clean, fclean, re, all, bonus
+.PHONY: clean, fclean, re, all
 
 all: $(NAME)
-bonus: $(BONUS_NAME)
 
 $(NAME): $(OBJS) $(LIBFT)
 	$(CC) $(CFLAGS) -Llibft -lft -Iinclude -o $@ $(OBJS);
@@ -26,12 +25,10 @@ $(OBJS): %.o: %.c $(HEADERS)
 
 clean:
 	rm -f $(OBJS)
-	rm -f $(BONUS_OBJS)
 	$(MAKE) -C ./libft clean
 
 fclean: clean
 	rm -f $(NAME)
-	rm -f $(BONUS_NAME)
 	$(MAKE) -C ./libft fclean
 
 re: fclean all
