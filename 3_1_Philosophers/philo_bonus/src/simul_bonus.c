@@ -6,7 +6,7 @@
 /*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/28 02:18:57 by sdg               #+#    #+#             */
-/*   Updated: 2023/07/03 04:27:17 by sdg              ###   ########.fr       */
+/*   Updated: 2023/07/03 04:31:50 by sdg              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,9 @@ void	*philo_routine(void *init_param)
 	else
 		philo_routine_loop(rule_info, philo_info);
 	if (rule_info->min_times_eat != -1 && rule_info->num_of_philo == \
-		rule_info->end_philo_cnt)
+		rule_info->end_philo_cnt) {
 		exit(-1);
+	}
 	else
 		exit(philo_info->id);
 	return (0);
@@ -116,17 +117,18 @@ void	wait_kill_sig(t_rule_info *rule_info)
 	int	sig;
 
 	sig = wait(0);
+	printf("sig: %d\n", sig);
 	if(sig == -1)
 	{
 		// 모든 process kill
 		// kill();
-		printf("모든 process kill\n");
+		printf("times of philo eat\n");
 	}
 	else
 	{
 		// 모든 process kill
 		// kill();
-		printf("모든 process kill\n");
+		printf("philo die\n");
 		// 모든 process가 kill되었다면
 		philo_state_print(rule_info, sig, "died");
 	}
