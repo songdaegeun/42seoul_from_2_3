@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasong <dasong@student.42.fr>              +#+  +:+       +#+        */
+/*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/23 14:06:19 by dasong            #+#    #+#             */
-/*   Updated: 2023/07/01 14:10:52 by dasong           ###   ########.fr       */
+/*   Updated: 2023/07/02 20:51:39 by sdg              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int	rule_init(int argc, char **argv, t_rule_info *rule_info)
 {
 	int	errno;
 
-	rule_info->start_time = get_milli_time();
+	rule_info->start_time = get_micro_time();
 	rule_info->end_philo_cnt = 0;
 	rule_info->end_flag = 0;
 	rule_info->num_of_philo = ft_atoi(argv[1]);

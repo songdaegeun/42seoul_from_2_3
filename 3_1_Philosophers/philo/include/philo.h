@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasong <dasong@student.42.fr>              +#+  +:+       +#+        */
+/*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/23 14:03:15 by dasong            #+#    #+#             */
-/*   Updated: 2023/07/01 22:48:07 by dasong           ###   ########.fr       */
+/*   Updated: 2023/07/02 21:56:43 by sdg              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,12 +50,14 @@ int			simul_start(t_rule_info *rule_info, t_philo_info *philo_info);
 void		*philo_thread(void *init_param);
 int			mornitoring(t_rule_info *rule_info, t_philo_info *philo_info);
 void		philo_eating(t_philo_info *philo_info);
-void		wait_duration(int duration, t_philo_info *philo_info, int flag);
+void		wait_duration(long long duration, t_philo_info *philo_info, \
+int flag);
 void		philo_state_print(t_rule_info *rule_info, int id, \
 const char*str, int flag);
-long long	get_milli_time(void);
+long long	get_micro_time(void);
 void		mem_release(t_philo_info *philo_info, int i);
 void		even_eating(t_philo_info *philo_info);
 void		odd_eating(t_philo_info *philo_info);
+void		philo_thread_loop(t_rule_info *rule_info, t_philo_info *philo_info);
 
 #endif
