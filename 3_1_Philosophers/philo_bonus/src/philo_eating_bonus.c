@@ -6,7 +6,7 @@
 /*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/28 02:19:45 by sdg               #+#    #+#             */
-/*   Updated: 2023/07/03 04:06:31 by sdg              ###   ########.fr       */
+/*   Updated: 2023/07/03 06:33:46 by sdg              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,10 @@ void	wait_duration(long long duration, t_philo_info *philo_info, int flag)
 
 	rule_info = philo_info->rule;
 	if (flag == 1)
-		target = duration + philo_info->prev_eat_start_time;
+		target = duration + *(philo_info->prev_eat_start_time);
 	else if (flag == 2)
-		target = duration + philo_info->prev_sleep_start_time;
-	while (!rule_info->end_flag && target >= get_micro_time())
+		target = duration + *(philo_info->prev_sleep_start_time);
+	while (!*(rule_info->end_flag) && target >= get_micro_time())
 	{
 		usleep(100 * rule_info->num_of_philo * 10 / 200);
 	}
@@ -46,7 +46,7 @@ void	odd_eating(t_philo_info *philo_info)
 	sem_wait(rule_info->sem_lock);
 	philo_state_print(rule_info, philo_info->id, "has taken a fork");
 	philo_state_print(rule_info, philo_info->id, "is eating");
-	philo_info->prev_eat_start_time = get_micro_time();
+	*(philo_info->prev_eat_start_time) = get_micro_time();
 	wait_duration(rule_info->time_to_eat * 1000LL, philo_info, 1);
 	philo_info->cnt_eat++;
 	sem_post(rule_info->sem_lock);
@@ -63,7 +63,7 @@ void	even_eating(t_philo_info *philo_info)
 	sem_wait(rule_info->sem_lock);
 	philo_state_print(rule_info, philo_info->id, "has taken a fork");
 	philo_state_print(rule_info, philo_info->id, "is eating");
-	philo_info->prev_eat_start_time = get_micro_time();
+	*(philo_info->prev_eat_start_time) = get_micro_time();
 	wait_duration(rule_info->time_to_eat * 1000LL, philo_info, 1);
 	philo_info->cnt_eat++;
 	sem_post(rule_info->sem_lock);

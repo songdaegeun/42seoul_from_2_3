@@ -6,7 +6,7 @@
 /*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/23 14:06:19 by dasong            #+#    #+#             */
-/*   Updated: 2023/07/03 04:28:00 by sdg              ###   ########.fr       */
+/*   Updated: 2023/07/03 06:16:14 by sdg              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ int	rule_init(int argc, char **argv, t_rule_info *rule_info)
 {
 	rule_info->start_time = get_micro_time();
 	rule_info->end_philo_cnt = 0;
-	rule_info->end_flag = 0;
 	rule_info->num_of_philo = ft_atoi(argv[1]);
 	rule_info->time_to_die = ft_atoi(argv[2]);
 	rule_info->time_to_eat = ft_atoi(argv[3]);
@@ -83,7 +82,7 @@ int	philo_init(t_rule_info *rule_info, t_philo_info **philo_info)
 	while (i < rule_info->num_of_philo)
 	{
 		(*philo_info)[i].id = i;
-		(*philo_info)[i].prev_eat_start_time = rule_info->start_time;
+		// *((*philo_info)[i].prev_eat_start_time) = rule_info->start_time;
 		(*philo_info)[i].cnt_eat = 0;
 		(*philo_info)[i].rule = rule_info;
 		i++;
