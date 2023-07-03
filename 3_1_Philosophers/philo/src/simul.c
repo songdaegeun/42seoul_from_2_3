@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   simul.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: dasong <dasong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/28 02:18:57 by sdg               #+#    #+#             */
-/*   Updated: 2023/07/03 05:02:17 by sdg              ###   ########.fr       */
+/*   Updated: 2023/07/03 18:13:10 by dasong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,5 +108,6 @@ void	philo_thread_loop(t_rule_info *rule_info, t_philo_info *philo_info)
 		philo_info->prev_sleep_start_time = get_micro_time();
 		wait_duration(rule_info->time_to_sleep * 1000LL, philo_info, 2);
 		philo_state_print(rule_info, philo_info->id, "is thinking", 0);
+		usleep(100);
 	}
 }

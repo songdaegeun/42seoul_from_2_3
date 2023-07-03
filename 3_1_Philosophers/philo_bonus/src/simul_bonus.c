@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   simul_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: dasong <dasong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/28 02:18:57 by sdg               #+#    #+#             */
-/*   Updated: 2023/07/03 16:20:21 by sdg              ###   ########.fr       */
+/*   Updated: 2023/07/03 18:13:42 by dasong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,7 @@ void	philo_routine_loop(t_rule_info *rule_info, t_philo_info *philo_info)
 		{
 			exit(255);
 		}
+		usleep(100);
 	}
 }
 

@@ -6,6 +6,9 @@
 		"philo_bonus.h": "c",
 		"stat.h": "c",
 		"unistd.h": "c",
-		"semaphore.h": "c"
+		"semaphore.h": "c",
+		"__locale": "c",
+		"locale": "c",
+		"sstream": "c"
 	}
 }
