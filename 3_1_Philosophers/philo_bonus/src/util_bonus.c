@@ -6,7 +6,7 @@
 /*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/28 02:21:18 by sdg               #+#    #+#             */
-/*   Updated: 2023/07/03 06:14:38 by sdg              ###   ########.fr       */
+/*   Updated: 2023/07/03 15:02:21 by sdg              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,3 @@ long long	get_micro_time(void)
 	gettimeofday(&mytime, 0);
 	return ((mytime.tv_sec * 1000000LL + mytime.tv_usec));
 }
-
-// void	mem_release(t_philo_info *philo_info)
-// {
-// 	t_rule_info		*rule_info;
-
-// 	rule_info = philo_info->rule;
-// 	sem_close(rule_info->sem_lock);
-// }

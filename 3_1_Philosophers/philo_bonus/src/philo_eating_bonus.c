@@ -6,7 +6,7 @@
 /*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/28 02:19:45 by sdg               #+#    #+#             */
-/*   Updated: 2023/07/03 06:33:46 by sdg              ###   ########.fr       */
+/*   Updated: 2023/07/03 15:17:20 by sdg              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	wait_duration(long long duration, t_philo_info *philo_info, int flag)
 	if (flag == 1)
 		target = duration + *(philo_info->prev_eat_start_time);
 	else if (flag == 2)
-		target = duration + *(philo_info->prev_sleep_start_time);
+		target = duration + philo_info->prev_sleep_start_time;
 	while (!*(rule_info->end_flag) && target >= get_micro_time())
 	{
 		usleep(100 * rule_info->num_of_philo * 10 / 200);
