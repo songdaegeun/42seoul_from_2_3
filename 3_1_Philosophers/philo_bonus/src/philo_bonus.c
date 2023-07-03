@@ -6,7 +6,7 @@
 /*   By: dasong <dasong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/23 14:06:19 by dasong            #+#    #+#             */
-/*   Updated: 2023/07/03 18:17:38 by dasong           ###   ########.fr       */
+/*   Updated: 2023/07/03 23:51:44 by dasong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ int	rule_init(int argc, char **argv, t_rule_info *rule_info)
 {
 	rule_info->start_time = get_micro_time();
 	rule_info->end_philo_cnt = 0;
+	rule_info->end_flag = 0;
 	rule_info->num_of_philo = ft_atoi(argv[1]);
 	rule_info->time_to_die = ft_atoi(argv[2]);
 	rule_info->time_to_eat = ft_atoi(argv[3]);
@@ -59,10 +60,7 @@ int	rule_init(int argc, char **argv, t_rule_info *rule_info)
 	if (rule_info->num_of_philo <= 0 || rule_info->time_to_die < 0 || \
 	rule_info->time_to_eat < 0 || rule_info->time_to_sleep < 0)
 		return (2);
-	sem_unlink("sem_fork");
-	rule_info->sem_lock = sem_open("sem_fork", O_CREAT | O_EXCL, \
-	000000644, rule_info->num_of_philo);
-	if (rule_info->sem_lock == SEM_FAILED)
+	if (sem_set(rule_info))
 		return (7);
 	return (0);
 }
@@ -84,7 +82,28 @@ int	philo_init(t_rule_info *rule_info, t_philo_info **philo_info)
 		(*philo_info)[i].id = i;
 		(*philo_info)[i].cnt_eat = 0;
 		(*philo_info)[i].rule = rule_info;
+		(*philo_info)[i].prev_eat_start_time = rule_info->start_time;
 		i++;
 	}
+	return (0);
+}
+
+int	sem_set(t_rule_info *rule_info)
+{
+	sem_unlink("sem_lock");
+	rule_info->sem_lock = sem_open("sem_lock", O_CREAT | O_EXCL, \
+	000000644, rule_info->num_of_philo);
+	if (rule_info->sem_lock == SEM_FAILED)
+		return (7);
+	sem_unlink("sem_monitor");
+	rule_info->sem_monitor = sem_open("sem_monitor", O_CREAT | O_EXCL, \
+	000000644, 1);
+	if (rule_info->sem_monitor == SEM_FAILED)
+		return (7);
+	sem_unlink("sem_end_flag");
+	rule_info->sem_end_flag = sem_open("sem_end_flag", O_CREAT | O_EXCL, \
+	000000644, 1);
+	if (rule_info->sem_end_flag == SEM_FAILED)
+		return (7);
 	return (0);
 }
