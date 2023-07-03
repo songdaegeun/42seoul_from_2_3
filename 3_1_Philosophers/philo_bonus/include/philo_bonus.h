@@ -6,7 +6,7 @@
 /*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/23 14:03:15 by dasong            #+#    #+#             */
-/*   Updated: 2023/07/03 15:14:15 by sdg              ###   ########.fr       */
+/*   Updated: 2023/07/03 15:51:53 by sdg              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,5 +59,6 @@ void		wait_duration(long long duration, t_philo_info \
 *philo_info, int flag);
 void		odd_eating(t_philo_info *philo_info);
 void		even_eating(t_philo_info *philo_info);
+int			wait_any_philo(t_philo_info *philo_info);
 
 #endif

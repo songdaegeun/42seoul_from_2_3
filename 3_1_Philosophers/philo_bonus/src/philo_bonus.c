@@ -6,7 +6,7 @@
 /*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/23 14:06:19 by dasong            #+#    #+#             */
-/*   Updated: 2023/07/03 06:16:14 by sdg              ###   ########.fr       */
+/*   Updated: 2023/07/03 16:21:59 by sdg              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int	rule_init(int argc, char **argv, t_rule_info *rule_info)
 	rule_info->time_to_eat < 0 || rule_info->time_to_sleep < 0)
 		return (2);
 	sem_unlink("sem_fork");
-	rule_info->sem_lock = sem_open("sem_fork", O_CREAT|O_EXCL, \
+	rule_info->sem_lock = sem_open("sem_fork", O_CREAT | O_EXCL, \
 	000000644, rule_info->num_of_philo);
 	if (rule_info->sem_lock == SEM_FAILED)
 		return (7);
@@ -82,7 +82,6 @@ int	philo_init(t_rule_info *rule_info, t_philo_info **philo_info)
 	while (i < rule_info->num_of_philo)
 	{
 		(*philo_info)[i].id = i;
-		// *((*philo_info)[i].prev_eat_start_time) = rule_info->start_time;
 		(*philo_info)[i].cnt_eat = 0;
 		(*philo_info)[i].rule = rule_info;
 		i++;

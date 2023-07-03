@@ -16,7 +16,8 @@ int main()
   ptr = mmap(NULL,sizeof(int),PROT_READ|PROT_WRITE,MAP_SHARED,fd,0);
   close(fd);
   /* 세마포어를 생성화고 초기화 한다. */
-  if((mutex = sem_open("my_sem", O_CREAT|O_EXCL, 0000700, 1)) != SEM_FAILED)
+  sem_unlink("my_sem");
+  if((mutex = sem_open("my_sem", O_CREAT|O_EXCL, 0000700, 1)) == SEM_FAILED)
     {
       perror("semaphore initilization");
       exit(0);
@@ -35,5 +36,7 @@ int main()
     printf("parent: %d\n", (*ptr)++);
     sem_post(mutex);
   }
+  sem_unlink("my_sem");
+//   sem_clo
   exit(0);
 }

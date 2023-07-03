@@ -6,7 +6,7 @@
 /*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/28 02:18:57 by sdg               #+#    #+#             */
-/*   Updated: 2023/07/03 15:17:29 by sdg              ###   ########.fr       */
+/*   Updated: 2023/07/03 16:20:21 by sdg              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,10 +60,7 @@ void	*philo_routine(void *init_param)
 	}
 	else
 		philo_routine_loop(rule_info, philo_info);
-	if (rule_info->min_times_eat != -1 && (rule_info->num_of_philo == rule_info->end_philo_cnt))
-		exit(255);
-	else
-		exit(philo_info->id);
+	exit(philo_info->id);
 	return (0);
 }
 
@@ -77,11 +74,12 @@ void	*mornitoring(void *init_param)
 	rule_info = philo_info->rule;
 	while (!*(rule_info->end_flag))
 	{
-		if (rule_info->min_times_eat != -1 && (rule_info->num_of_philo == rule_info->end_philo_cnt))
-			*(rule_info->end_flag) = 1;
 		now = get_micro_time();
-		if ((now - *(philo_info->prev_eat_start_time)) >= rule_info->time_to_die * 1000)
+		if ((now - *(philo_info->prev_eat_start_time)) >= \
+		rule_info->time_to_die * 1000)
+		{
 			*(rule_info->end_flag) = 1;
+		}
 		usleep(1000);
 	}
 	return (0);
@@ -98,14 +96,14 @@ void	philo_routine_loop(t_rule_info *rule_info, t_philo_info *philo_info)
 	while (!*(rule_info->end_flag))
 	{
 		philo_eating(philo_info);
-		if (rule_info->min_times_eat == philo_info->cnt_eat)
-		{
-			rule_info->end_philo_cnt++;
-		}
 		philo_state_print(rule_info, philo_info->id, "is sleeping");
 		philo_info->prev_sleep_start_time = get_micro_time();
 		wait_duration(rule_info->time_to_sleep * 1000LL, philo_info, 2);
 		philo_state_print(rule_info, philo_info->id, "is thinking");
+		if (rule_info->min_times_eat == philo_info->cnt_eat)
+		{
+			exit(255);
+		}
 	}
 }
 
@@ -117,20 +115,20 @@ void	wait_kill_sig(t_philo_info *philo_info)
 	t_rule_info	*rule_info;
 
 	rule_info = philo_info->rule;
-	if (wait(&status) < 0)
-		return ;
-	sig = WEXITSTATUS(status);
-	printf("sig:%d\n",sig);
 	i = -1;
-	if (sig == 255)
+	while (++i < rule_info->num_of_philo)
 	{
-		while (++i < rule_info->num_of_philo)
-			kill(philo_info[i].pid , 15);
+		if (waitpid(-1, &status, 0) < 0)
+			return ;
+		sig = WEXITSTATUS(status);
+		if (sig != 255)
+			break ;
 	}
-	else
+	if (sig != 255)
 	{
+		i = -1;
 		while (++i < rule_info->num_of_philo)
-			kill(philo_info[i].pid , 15);
+			kill(philo_info[i].pid, 15);
 		i = -1;
 		while (++i < rule_info->num_of_philo)
 			waitpid(philo_info[i].pid, 0, 0);
