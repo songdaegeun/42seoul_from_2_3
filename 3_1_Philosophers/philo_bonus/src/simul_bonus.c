@@ -6,7 +6,7 @@
 /*   By: dasong <dasong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/28 02:18:57 by sdg               #+#    #+#             */
-/*   Updated: 2023/07/03 18:13:42 by dasong           ###   ########.fr       */
+/*   Updated: 2023/07/03 22:53:17 by dasong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ void	philo_routine_loop(t_rule_info *rule_info, t_philo_info *philo_info)
 	{
 		usleep(100);
 		if ((philo_info->id + 1) == rule_info->num_of_philo)
-			usleep(50);
+			usleep(100);
 	}
 	while (!*(rule_info->end_flag))
 	{

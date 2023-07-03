@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_bonus.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: dasong <dasong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/23 14:03:15 by dasong            #+#    #+#             */
-/*   Updated: 2023/07/03 15:51:53 by sdg              ###   ########.fr       */
+/*   Updated: 2023/07/03 22:57:58 by dasong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ typedef struct s_rule_info {
 	int				end_philo_cnt;
 	int				*end_flag;
 	sem_t			*sem_lock;
+	sem_t			*sem_monitor;
+	sem_t			*sem_end_flag;
 }	t_rule_info;
 
 typedef struct s_philo_info {
