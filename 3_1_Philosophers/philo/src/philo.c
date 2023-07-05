@@ -6,7 +6,7 @@
 /*   By: dasong <dasong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/23 14:06:19 by dasong            #+#    #+#             */
-/*   Updated: 2023/07/03 18:13:26 by dasong           ###   ########.fr       */
+/*   Updated: 2023/07/05 21:47:27 by dasong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,10 @@ int	mutex_set(t_rule_info *rule_info)
 	int	i;
 
 	if (pthread_mutex_init(&rule_info->mutex_print, 0) == -1)
+		return (3);
+	if (pthread_mutex_init(&rule_info->mutex_monitor, 0) == -1)
+		return (3);
+	if (pthread_mutex_init(&rule_info->mutex_end_flag, 0) == -1)
 		return (3);
 	rule_info->mutex_forks = (pthread_mutex_t *)malloc(rule_info->num_of_philo \
 	* sizeof(pthread_mutex_t));
