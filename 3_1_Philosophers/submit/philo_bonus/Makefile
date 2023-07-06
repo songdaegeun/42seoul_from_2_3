@@ -1,0 +1,34 @@
+CC=	cc
+CFLAGS = -Wall -Wextra -Werror -pthread
+NAME = philo_bonus
+
+LIBFT = ./libft/libft.a
+HEADER = philo_bonus.h
+HEADERS = $(addprefix include/, $(HEADER))
+
+SRC = philo_bonus.c simul_bonus.c philo_eating_bonus.c util_bonus.c
+SRCS = $(addprefix src/, $(SRC))
+OBJS = $(SRCS:.c=.o)
+
+.PHONY: clean, fclean, re, all
+
+all: $(NAME)
+
+$(NAME): $(OBJS) $(LIBFT)
+	$(CC) $(CFLAGS) -Llibft -lft -Iinclude -o $@ $(OBJS);
+
+$(LIBFT): ./include/libft.h
+	$(MAKE) -C ./libft all
+
+$(OBJS): %.o: %.c $(HEADERS)
+	$(CC) $(CFLAGS) -Iinclude -o $@ -c $<
+
+clean:
+	rm -f $(OBJS)
+	$(MAKE) -C ./libft clean
+
+fclean: clean
+	rm -f $(NAME)
+	$(MAKE) -C ./libft fclean
+
+re: fclean all
