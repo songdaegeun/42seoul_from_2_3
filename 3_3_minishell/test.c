@@ -2,18 +2,25 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <stdlib.h>
-// gcc test.c -lreadline 
+#include <string.h>
+
+// gcc test.c -I/opt/homebrew/opt/readline/include -L/opt/homebrew/opt/readline/lib -lreadline
+
+
 int main()
 {
 	char *str;
 	
-	str = readline("prompt:");
-	add_history(str);
-	free(str);
-	HIST_ENTRY *mylist = history_get(3);
-	const char *stradd = mylist->line;
-	printf("%s\n", stradd);
-	
-	free(mylist);
+	while(1) {
+		str = readline("prompt:");
+		if(str)
+			printf("%s\n", str);
+		else
+			break;
+		add_history(str);
+		if(strcmp(str,"clr") == 0)
+			rl_clear_history();
+		free(str);
+	}
 	return (0);
 }
