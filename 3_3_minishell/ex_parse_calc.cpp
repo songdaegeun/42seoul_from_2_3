@@ -1,70 +1,12 @@
 #include <iostream>
 #include <string>
 using namespace std;
+
 class Calculator
 {
-    string expr;
 public:
-    Calculator(string expr)
-    {        
-        this->expr = expr;
-        tcnt = 0;
-    }
-    void Run()
-    {
-        cout<<expr<<"을 계산합니다. ..."<<endl;
-        if(Lexical())
-        {
-            if(Syntax())
-            {
-                Parsing();
-                PostOrderView();
-                cout<<expr<<"="<<Calculate()<<endl;
-            }
-            else
-            {
-                cout<<"수식에 사용한 표현이 문법에 맞지 않습니다."<<endl;
-            }
-        }
-        else
-        {
-            cout<<"사용할 수 없는 기호가 있습니다."<<endl;
-        }
-        cout<<endl;
-    }
-private:
-    bool Lexical()
-    {        
-        int i = 0;
-        while(expr[i])
-        {
-            if(IsOperator(expr[i]))
-            {
-                i = MakeOperator(i);
-            }
-            else
-            {
-                if(IsDigit(expr[i]))
-                {
-                    i = MakeOperand(i);
-                }
-                else
-                {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-    bool IsOperator(char ch)
-    {
-        return (ch =='+')||(ch=='-')||(ch=='*')||(ch=='/');
-    }
-    bool IsDigit(char ch)
-    {
-        return (ch>='0')&&(ch<='9');
-    }
-    struct Token
+    string expr;
+	struct Token
     {
         int priority;
         virtual void View()=0;
@@ -94,14 +36,6 @@ private:
         }
         
     };
-    Token *tokens[100];
-    int tcnt;
-    int MakeOperator(int i)
-    {
-        tokens[tcnt] = new Operator(expr[i]);
-        tcnt++;
-        return i+1;
-    }
     struct Operand:public Token
     {
         int value;
@@ -116,45 +50,7 @@ private:
         }
         
     };
-    
-    int MakeOperand(int i)
-    {
-        int value = 0;
-        while(IsDigit(expr[i]))
-        {
-            value = value*10 + expr[i] - '0';
-            i++;
-        }
-        tokens[tcnt] = new Operand(value);
-        tcnt++;
-        return i;
-    }    
-
-    bool Syntax()
-    {
-        if(tcnt%2==0)
-        {
-            return false;
-        }
-        if(tokens[0]->priority !=3)
-        {
-            return false;
-        }
-        for(int i = 1; i<tcnt; i+=2)
-        {
-            if(tokens[i]->priority==3)
-            {
-                return false;
-            }            
-            if(tokens[i+1]->priority != 3)
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    struct ParserTree
+	struct ParserTree
     {
         struct Node
         {
@@ -243,7 +139,109 @@ private:
             return op->value;
         }
     };
+
     ParserTree *ps;
+	Token *tokens[100];
+    int tcnt;
+    Calculator(string expr)
+    {        
+        this->expr = expr;
+        tcnt = 0;
+    }
+    void Run()
+    {
+        cout << expr << "을 계산합니다. ..." << endl;
+        if(Lexical())
+        {
+            if(Syntax())
+            {
+                Parsing();
+                PostOrderView();
+                cout<<expr<<"="<<Calculate()<<endl;
+            }
+            else
+            {
+                cout<<"수식에 사용한 표현이 문법에 맞지 않습니다."<<endl;
+            }
+        }
+        else
+        {
+            cout<<"사용할 수 없는 기호가 있습니다."<<endl;
+        }
+        cout << endl;
+    }
+    bool Lexical()
+    {        
+        int i = 0;
+        while(expr[i])
+        {
+            if(IsOperator(expr[i]))
+            {
+                i = MakeOperator(i);
+            }
+            else
+            {
+                if(IsDigit(expr[i]))
+                {
+                    i = MakeOperand(i);
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    bool IsOperator(char ch)
+    {
+        return (ch =='+')||(ch=='-')||(ch=='*')||(ch=='/');
+    }
+    bool IsDigit(char ch)
+    {
+        return (ch>='0')&&(ch<='9');
+    }
+    int MakeOperator(int i)
+    {
+        tokens[tcnt] = new Operator(expr[i]);
+        tcnt++;
+        return i+1;
+    }
+    int MakeOperand(int i)
+    {
+        int value = 0;
+        while(IsDigit(expr[i]))
+        {
+            value = value*10 + expr[i] - '0';
+            i++;
+        }
+        tokens[tcnt] = new Operand(value);
+        tcnt++;
+        return i;
+    }    
+    bool Syntax()
+    {
+        if(tcnt%2==0)
+        {
+            return false;
+        }
+        if(tokens[0]->priority !=3)
+        {
+            return false;
+        }
+        for(int i = 1; i<tcnt; i+=2)
+        {
+            if(tokens[i]->priority==3)
+            {
+                return false;
+            }            
+            if(tokens[i+1]->priority != 3)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
     void Parsing()
     {
         ps = new ParserTree(tokens[0]);
