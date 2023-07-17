@@ -1,38 +1,42 @@
-#include <iostream>
-#include <string>
-using namespace std;
-class Calculator
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
+int tcnt = 0;
+
+typedef struct s_calculator
 {
-    string expr;
-public:
-    Calculator(string expr)
-    {        
-        this->expr = expr;
-        tcnt = 0;
-    }
-    void Run()
+    char *expr;
+} t_calculator;
+
+void Run(t_calculator* cal)
+{
+    char *expr = cal->expr;
+
+    // cout<<expr<<"을 계산합니다. ..."<<endl;
+    printf("%s을 계산합니다. ...\n",expr);
+    if(Lexical())
     {
-        cout<<expr<<"을 계산합니다. ..."<<endl;
-        if(Lexical())
+        if(Syntax())
         {
-            if(Syntax())
-            {
-                Parsing();
-                PostOrderView();
-                cout<<expr<<"="<<Calculate()<<endl;
-            }
-            else
-            {
-                cout<<"수식에 사용한 표현이 문법에 맞지 않습니다."<<endl;
-            }
+            Parsing();
+            PostOrderView();
+            cout<<expr<<"="<<Calculate()<<endl;
         }
         else
         {
-            cout<<"사용할 수 없는 기호가 있습니다."<<endl;
+            cout<<"수식에 사용한 표현이 문법에 맞지 않습니다."<<endl;
         }
-        cout<<endl;
     }
-private:
+    else
+    {
+        cout<<"사용할 수 없는 기호가 있습니다."<<endl;
+    }
+    cout<<endl;
+}
+
+struct Calculator
+{
     bool Lexical()
     {        
         int i = 0;
@@ -64,10 +68,10 @@ private:
     {
         return (ch>='0')&&(ch<='9');
     }
+    
     struct Token
     {
         int priority;
-        virtual void View()=0;
         bool MoreThanPriority(Token *token)
         {
             return priority>=token->priority;
@@ -223,7 +227,7 @@ private:
             {
                 int lvalue = PostOrderCalculate(sr->lc);
                 int rvalue = PostOrderCalculate(sr->rc);
-                Operator *op = dynamic_cast<Operator *>(sr->token);
+                Operator *op = dynamic_cast(sr->token);
                 switch(op->ch)
                 {
                 case '+': return lvalue + rvalue;
@@ -239,7 +243,7 @@ private:
                 }
                 throw "정의하지 않은 연산자입니다.";
             }
-            Operand *op = dynamic_cast<Operand *>(sr->token);
+            Operand *op = dynamic_cast(sr->token);
             return op->value;
         }
     };
@@ -264,7 +268,7 @@ private:
 
 int main()
 {
-    string tc_exprs[6]=
+    char tc_exprs[6][256]=
     {
         "2+3-5*5+6/2",
         "23*5/2+4*6",
@@ -273,11 +277,18 @@ int main()
         "3+36+-7",
         "45+3*5-2+5/2*7",        
     };
+    t_calculator *cal;
+
     for(int i = 0; i<6; i++)
     {
-        Calculator *cal  = new Calculator(tc_exprs[i]);
-        cal->Run();
-        delete cal;
+        cal = (t_calculator *)malloc(sizeof(t_calculator));
+        cal->expr = tc_exprs[i];
+
+        run(cal);
+
+        // delete cal;
+        free(cal);
+
     }
     return 0;
 }
