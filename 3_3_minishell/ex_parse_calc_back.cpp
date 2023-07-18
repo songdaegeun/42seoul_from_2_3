@@ -1,42 +1,38 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
-
-int tcnt = 0;
-
-typedef struct s_calculator
+#include <iostream>
+#include <string>
+using namespace std;
+class Calculator
 {
-    char *expr;
-} t_calculator;
-
-void Run(t_calculator* cal)
-{
-    char *expr = cal->expr;
-
-    // cout<<expr<<"을 계산합니다. ..."<<endl;
-    printf("%s을 계산합니다. ...\n",expr);
-    if(Lexical())
+    string expr;
+public:
+    Calculator(string expr)
+    {        
+        this->expr = expr;
+        tcnt = 0;
+    }
+    void Run()
     {
-        if(Syntax())
+        cout<<expr<<"을 계산합니다. ..."<<endl;
+        if(Lexical())
         {
-            Parsing();
-            PostOrderView();
-            cout<<expr<<"="<<Calculate()<<endl;
+            if(Syntax())
+            {
+                Parsing();
+                PostOrderView();
+                cout<<expr<<"="<<Calculate()<<endl;
+            }
+            else
+            {
+                cout<<"수식에 사용한 표현이 문법에 맞지 않습니다."<<endl;
+            }
         }
         else
         {
-            cout<<"수식에 사용한 표현이 문법에 맞지 않습니다."<<endl;
+            cout<<"사용할 수 없는 기호가 있습니다."<<endl;
         }
+        cout<<endl;
     }
-    else
-    {
-        cout<<"사용할 수 없는 기호가 있습니다."<<endl;
-    }
-    cout<<endl;
-}
-
-struct Calculator
-{
+private:
     bool Lexical()
     {        
         int i = 0;
@@ -68,10 +64,10 @@ struct Calculator
     {
         return (ch>='0')&&(ch<='9');
     }
-    
     struct Token
     {
         int priority;
+        virtual void View()=0;
         bool MoreThanPriority(Token *token)
         {
             return priority>=token->priority;
@@ -178,9 +174,9 @@ struct Calculator
         }
         void Add(Token *token)
         {
-            Node *now = new Node(token);
             Token *st = root->token;
-            if(st->MoreThanPriority(token))
+			Node *now = new Node(token);
+	        if(st->MoreThanPriority(token))
             {
                 now->lc = root;
                 root = now;
@@ -268,7 +264,7 @@ struct Calculator
 
 int main()
 {
-    char tc_exprs[6][256]=
+    string tc_exprs[6]=
     {
         "2+3-5*5+6/2",
         "23*5/2+4*6",
@@ -277,18 +273,11 @@ int main()
         "3+36+-7",
         "45+3*5-2+5/2*7",        
     };
-    t_calculator *cal;
-
     for(int i = 0; i<6; i++)
     {
-        cal = (t_calculator *)malloc(sizeof(t_calculator));
-        cal->expr = tc_exprs[i];
-
-        run(cal);
-
-        // delete cal;
-        free(cal);
-
+        Calculator *cal  = new Calculator(tc_exprs[i]);
+        cal->Run();
+        delete cal;
     }
     return 0;
 }
