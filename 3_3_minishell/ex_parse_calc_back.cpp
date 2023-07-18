@@ -174,9 +174,9 @@ private:
         }
         void Add(Token *token)
         {
-            Node *now = new Node(token);
             Token *st = root->token;
-            if(st->MoreThanPriority(token))
+			Node *now = new Node(token);
+	        if(st->MoreThanPriority(token))
             {
                 now->lc = root;
                 root = now;
