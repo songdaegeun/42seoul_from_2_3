@@ -38,70 +38,78 @@
 // %token  In
 // /*      'in'   */
 
-program          ::= newline_list complete_commands newline_list | newline_list
-                 ;
-complete_commands::= complete_commands newline_list and_or | and_or
-                 ;
-and_or           ::=                         pipeline | and_or AND_IF newline_list pipeline | and_or OR_IF  newline_list pipeline
-                 ;
-pipeline         ::=      pipe_sequence
-                 ;
-pipe_sequence    ::=                             command | pipe_sequence '|' newline_list command
-                 ;
-command          ::= simple_command | compound_command | compound_command redirect_list
-                 ;
-compound_command ::= subshell | case_clause | if_clause | while_clause | until_clause
-                 ;
-subshell         ::= '(' compound_list ')'
-                 ;
-compound_list    ::= newline_list term | newline_list term newline_list
-                 ;
-term             ::= term newline_list and_or | and_or
-                 ;
-wordlist         ::= wordlist WORD |          WORD
-                 ;
-pattern          ::=             WORD        | pattern '|' WORD     
-                 ;
-simple_command	::= cmd_prefix cmd_word cmd_suffix 
-				| cmd_prefix cmd_word
-				| cmd_prefix
-				| cmd_name cmd_suffix 
-				| cmd_name
+program				::= newline_list complete_commands newline_list 
+					| newline_list
+					;
+complete_commands	::= complete_commands newline_list and_or
+					| and_or
+               		;
+and_or           	::= pipe_sequence 
+					| and_or AND_IF newline_list pipe_sequence 
+					| and_or OR_IF  newline_list pipe_sequence
+                 	;
+pipe_sequence    	::=	command 
+					| pipe_sequence '|' newline_list command
+                 	;
+command				::= simple_command 
+					| subshell 
+					| subshell redirect_list
+					;
+subshell			::= '(' compound_list ')'
+					;
+compound_list		::= newline_list term 
+					| newline_list term newline_list
+                	;
+term				::= term newline_list and_or 
+					| and_or
+					;
+wordlist        	::= wordlist WORD 
+					| WORD
+                	;
+simple_command		::= cmd_prefix cmd_word cmd_suffix 
+					| cmd_prefix cmd_word
+					| cmd_prefix
+					| cmd_name cmd_suffix 
+					| cmd_name
+					;
+cmd_name			::= WORD                   
+					;
+cmd_word			::= WORD                  
                 ;
-cmd_name		::= WORD                   
-                ;
-cmd_word		::= WORD                  
-                ;
-cmd_prefix		::=            io_redirect 
-				| cmd_prefix io_redirect 
-				|            ASSIGNMENT_WORD 
-				| cmd_prefix ASSIGNMENT_WORD
-                ;
-cmd_suffix		::=            io_redirect 
-				| cmd_suffix io_redirect 
-				|            WORD 
-				| cmd_suffix WORD
-                ;
-redirect_list	::=               io_redirect 
-				| redirect_list io_redirect
-                ;
-io_redirect		::=           io_file 
-				| IO_NUMBER io_file 
-				|           io_here 
-				| IO_NUMBER io_here
-                ;
-io_file			::= '<'       filename 
-				| '>'       filename 
-				| DGREAT    filename
-                ;
-filename		::= WORD                     
-                ;
-io_here			::= DLESS     here_end
-                ;
-here_end		::= WORD                      
-                ;
-newline_list	::=              NEWLINE 
-				| newline_list NEWLINE
-                ;
-sequential_sep	::= ';' newline_list 
-				| newline_list
+cmd_prefix			::=            io_redirect 
+					| cmd_prefix io_redirect 
+					|            ASSIGNMENT_WORD 
+					| cmd_prefix ASSIGNMENT_WORD
+					;
+cmd_suffix			::=            io_redirect 
+					| cmd_suffix io_redirect 
+					|            WORD 
+					| cmd_suffix WORD
+					;
+redirect_list		::=               io_redirect 
+					| redirect_list io_redirect
+					;
+io_redirect			::=           io_file 
+					| IO_NUMBER io_file 
+					|           io_here 
+					| IO_NUMBER io_here
+					;
+io_file				::= '<'       filename 
+					| '>'       filename 
+					| DGREAT    filename
+					;
+filename			::= WORD                     
+					;
+io_here				::= DLESS     here_end
+					;
+here_end			::= WORD                      
+					;
+newline_list		::=              NEWLINE 
+					| newline_list NEWLINE
+					;
+sequential_sep		::= ';' newline_list 
+					| newline_list
+
+/* 없어도 될거같음
+newline_list, sequential_sep
+*/
