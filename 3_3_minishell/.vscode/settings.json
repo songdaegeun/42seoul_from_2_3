@@ -28,6 +28,7 @@
 		"vector": "c",
 		"stdbool.h": "c",
 		"minishell_grammar": "c",
-		"minishell_grammar_editlog": "c"
+		"minishell_grammar_editlog": "c",
+		"bash_grammar": "c"
 	}
 }
