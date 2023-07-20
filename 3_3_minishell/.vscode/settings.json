@@ -26,6 +26,7 @@
 		"tuple": "c",
 		"type_traits": "c",
 		"vector": "c",
-		"stdbool.h": "c"
+		"stdbool.h": "c",
+		"minishell_grammar": "c"
 	}
 }
