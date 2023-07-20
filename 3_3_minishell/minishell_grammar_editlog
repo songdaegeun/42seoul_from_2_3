@@ -1,8 +1,8 @@
 %token  WORD           	// 예약어
-%token  ASSIGNMENT_WORD // 할당가능한 이름
+// %token  ASSIGNMENT_WORD // 할당가능한 이름. ASSIGNMENT_WORD=
 // %token  NAME			// 함수 이름
-%token  NEWLINE			// 개행
-%token  IO_NUMBER		// redirection
+// %token  NEWLINE			// 개행
+// %token  IO_NUMBER		// IO_NUMBER>
 
 %token  AND_IF    OR_IF    DSEMI
 /*      '&&'      '||'     ';;'    */
@@ -38,22 +38,22 @@
 // %token  In
 // /*      'in'   */
 
-program				::= newline_list complete_commands newline_list 
-					| newline_list
-					;
-complete_commands	::= complete_commands newline_list and_or
+// program				::= newline_list complete_commands newline_list 
+// 					| newline_list
+//					;
+complete_commands	::= complete_commands and_or
 					| and_or
                		;
 // complete_command ::= and_or
 //                  ;
 and_or           	::= pipe_sequence 
-					| and_or AND_IF newline_list pipe_sequence 
-					| and_or OR_IF  newline_list pipe_sequence
+					| and_or AND_IF pipe_sequence 
+					| and_or OR_IF pipe_sequence
                  	;
 // pipeline         ::=      pipe_sequence
 //                  ;
 pipe_sequence    	::=	command 
-					| pipe_sequence '|' newline_list command
+					| pipe_sequence '|' command
                  	;
 command				::= simple_command 
 					| subshell 
@@ -61,12 +61,11 @@ command				::= simple_command
 					;
 // compound_command	::= subshell 
 // 					;
-subshell			::= '(' compound_list ')'
+subshell			::= '(' term ')'
 					;
-compound_list		::= newline_list term 
-					| newline_list term newline_list
-                	;
-term				::= term newline_list and_or 
+// compound_list		::= term 
+//                 	;
+term				::= term and_or 
 					| and_or
 					;
 // for_clause       ::= For name                                      do_group | For name                       sequential_sep do_group | For name newline_list in          sequential_sep do_group | For name newline_list in wordlist sequential_sep do_group
@@ -75,9 +74,9 @@ term				::= term newline_list and_or
 //                  ;
 // in               ::= In                    
 //                  ;
-wordlist        	::= wordlist WORD 
-					| WORD
-                	;
+// wordlist        	::= wordlist WORD 
+// 					| WORD
+//                 	;
 // case_clause      ::= Case WORD newline_list in newline_list case_list    Esac | Case WORD newline_list in newline_list case_list_ns Esac | Case WORD newline_list in newline_list              Esac
 //                  ;
 // case_list_ns     ::= case_list case_item_ns |           case_item_ns
@@ -121,8 +120,6 @@ cmd_word			::= WORD
                 ;
 cmd_prefix			::=            io_redirect 
 					| cmd_prefix io_redirect 
-					|            ASSIGNMENT_WORD 
-					| cmd_prefix ASSIGNMENT_WORD
 					;
 cmd_suffix			::=            io_redirect 
 					| cmd_suffix io_redirect 
@@ -133,9 +130,7 @@ redirect_list		::=               io_redirect
 					| redirect_list io_redirect
 					;
 io_redirect			::=           io_file 
-					| IO_NUMBER io_file 
 					|           io_here 
-					| IO_NUMBER io_here
 					;
 io_file				::= '<'       filename 
 					| '>'       filename 
@@ -147,18 +142,14 @@ io_here				::= DLESS     here_end
 					;
 here_end			::= WORD                      
 					;
-newline_list		::=              NEWLINE 
-					| newline_list NEWLINE
-					;
+// newline_list		::=              NEWLINE 
+// 					| newline_list NEWLINE
+// 					;
 // linebreak        ::= newline_list
 //                  ;
 // separator_op     ::= '&' | ';'
 //                  ;
 // separator        ::= newline_list
 //                  ;
-sequential_sep		::= ';' newline_list 
-					| newline_list
-
-/* 없어도 될거같음
-newline_list, sequential_sep
-*/
+// sequential_sep		::= ';' newline_list 
+// 					| newline_list
