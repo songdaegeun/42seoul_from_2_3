@@ -62,10 +62,44 @@ compound_list    ::= linebreak term | linebreak term separator
                  ;
 term             ::= term separator and_or | and_or
                  ;
+// for_clause       ::= For name                                      do_group | For name                       sequential_sep do_group | For name linebreak in          sequential_sep do_group | For name linebreak in wordlist sequential_sep do_group
+//                  ;
+// name             ::= NAME                   
+//                  ;
+// in               ::= In                    
+//                  ;
 wordlist         ::= wordlist WORD |          WORD
                  ;
+// case_clause      ::= Case WORD linebreak in linebreak case_list    Esac | Case WORD linebreak in linebreak case_list_ns Esac | Case WORD linebreak in linebreak              Esac
+//                  ;
+// case_list_ns     ::= case_list case_item_ns |           case_item_ns
+//                  ;
+// case_list        ::= case_list case_item |           case_item
+//                  ;
+// case_item_ns     ::=     pattern ')' linebreak |     pattern ')' compound_list | '(' pattern ')' linebreak | '(' pattern ')' compound_list
+//                  ;
+// case_item        ::=     pattern ')' linebreak     DSEMI linebreak |     pattern ')' compound_list DSEMI linebreak | '(' pattern ')' linebreak     DSEMI linebreak | '(' pattern ')' compound_list DSEMI linebreak
+//                  ;
 pattern          ::=             WORD        | pattern '|' WORD     
                  ;
+// if_clause        ::= If compound_list Then compound_list else_part Fi | If compound_list Then compound_list           Fi
+//                  ;
+// else_part        ::= Elif compound_list Then compound_list | Elif compound_list Then compound_list else_part | Else compound_list
+//                  ;
+// while_clause     ::= While compound_list do_group
+//                  ;
+// until_clause     ::= Until compound_list do_group
+//                  ;
+// function_definition ::= fname '(' ')' linebreak function_body
+//                  ;
+// function_body    ::= compound_command              | compound_command redirect_list  
+//                  ;
+// fname            ::= NAME                           
+//                  ;
+// brace_group      ::= Lbrace compound_list Rbrace
+//                  ;
+// do_group         ::= Do compound_list Done        
+//                  ;
 simple_command   ::= cmd_prefix cmd_word cmd_suffix | cmd_prefix cmd_word | cmd_prefix | cmd_name cmd_suffix | cmd_name
                  ;
 cmd_name         ::= WORD                   

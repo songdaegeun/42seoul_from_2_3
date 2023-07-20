@@ -27,6 +27,7 @@
 		"type_traits": "c",
 		"vector": "c",
 		"stdbool.h": "c",
-		"minishell_grammar": "c"
+		"minishell_grammar": "c",
+		"minishell_grammar_editlog": "c"
 	}
 }

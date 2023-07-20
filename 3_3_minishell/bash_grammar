@@ -1,3 +1,8 @@
+%token  WORD
+%token  ASSIGNMENT_WORD
+%token  NAME
+%token  NEWLINE
+%token  IO_NUMBER
 
 %token  AND_IF    OR_IF    DSEMI
 /*      '&&'      '||'     ';;'    */
