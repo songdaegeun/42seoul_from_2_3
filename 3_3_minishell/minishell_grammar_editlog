@@ -98,34 +98,52 @@ pattern          ::=             WORD        | pattern '|' WORD
 //                  ;
 // do_group         ::= Do compound_list Done        
 //                  ;
-simple_command   ::= cmd_prefix cmd_word cmd_suffix | cmd_prefix cmd_word | cmd_prefix | cmd_name cmd_suffix | cmd_name
-                 ;
-cmd_name         ::= WORD                   
-                 ;
-cmd_word         ::= WORD                  
-                 ;
-cmd_prefix       ::=            io_redirect | cmd_prefix io_redirect |            ASSIGNMENT_WORD | cmd_prefix ASSIGNMENT_WORD
-                 ;
-cmd_suffix       ::=            io_redirect | cmd_suffix io_redirect |            WORD | cmd_suffix WORD
-                 ;
-redirect_list    ::=               io_redirect | redirect_list io_redirect
-                 ;
-io_redirect      ::=           io_file | IO_NUMBER io_file |           io_here | IO_NUMBER io_here
-                 ;
-io_file          ::= '<'       filename | '>'       filename | DGREAT    filename
-                 ;
-filename         ::= WORD                     
-                 ;
-io_here          ::= DLESS     here_end
-                 ;
-here_end         ::= WORD                      
-                 ;
-newline_list     ::=              NEWLINE | newline_list NEWLINE
-                 ;
+simple_command	::= cmd_prefix cmd_word cmd_suffix 
+				| cmd_prefix cmd_word
+				| cmd_prefix
+				| cmd_name cmd_suffix 
+				| cmd_name
+                ;
+cmd_name		::= WORD                   
+                ;
+cmd_word		::= WORD                  
+                ;
+cmd_prefix		::=            io_redirect 
+				| cmd_prefix io_redirect 
+				|            ASSIGNMENT_WORD 
+				| cmd_prefix ASSIGNMENT_WORD
+                ;
+cmd_suffix		::=            io_redirect 
+				| cmd_suffix io_redirect 
+				|            WORD 
+				| cmd_suffix WORD
+                ;
+redirect_list	::=               io_redirect 
+				| redirect_list io_redirect
+                ;
+io_redirect		::=           io_file 
+				| IO_NUMBER io_file 
+				|           io_here 
+				| IO_NUMBER io_here
+                ;
+io_file			::= '<'       filename 
+				| '>'       filename 
+				| DGREAT    filename
+                ;
+filename		::= WORD                     
+                ;
+io_here			::= DLESS     here_end
+                ;
+here_end		::= WORD                      
+                ;
+newline_list	::=              NEWLINE 
+				| newline_list NEWLINE
+                ;
 // linebreak        ::= newline_list
 //                  ;
 // separator_op     ::= '&' | ';'
 //                  ;
 // separator        ::= newline_list
 //                  ;
-sequential_sep   ::= ';' newline_list | newline_list
+sequential_sep	::= ';' newline_list 
+				| newline_list
