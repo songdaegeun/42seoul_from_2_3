@@ -6,7 +6,7 @@
 ; ps | cat >> log.txt << LIMIT | cat < log.txt > tmp.txt 
 ; WORD PIPE WORD DGREAT WORD DLESS WORD PIPE WORD LESS WORD GREAT WORD
 
-
+S' -> pipe_sequence
 pipe_sequence   -> simple_command
 pipe_sequence   -> pipe_sequence PIPE simple_command
 
