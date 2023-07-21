@@ -28,9 +28,6 @@ cmd_suffix      -> cmd_suffix io_redirect
 cmd_suffix      -> WORD 
 cmd_suffix      -> cmd_suffix WORD
 
-redirect_list   -> io_redirect 
-redirect_list   -> redirect_list io_redirect
-
 io_redirect     -> io_file 
 io_redirect     -> io_here
 
