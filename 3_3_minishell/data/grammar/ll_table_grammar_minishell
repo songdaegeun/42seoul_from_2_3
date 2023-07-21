@@ -22,8 +22,8 @@ cmd_suffix			::=            io_redirect
 io_redirect			::=           io_file 
 					|           io_here 
 					;
-io_file				::= REDIRECT_L   filename 
-					| REDIRECT_R     filename 
+io_file				::= LESS   filename 
+					| GREAT     filename 
 					| DGREAT    filename
 					;
 filename			::= WORD                     
