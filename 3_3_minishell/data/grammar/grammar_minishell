@@ -1,42 +1,14 @@
-%token  WORD           	// 예약어
-// %token  ASSIGNMENT_WORD // 할당가능한 이름. ASSIGNMENT_WORD=
-// %token  NAME			// 함수 이름
-// %token  NEWLINE			// 개행
-// %token  IO_NUMBER		// IO_NUMBER>
 
-%token  AND_IF    OR_IF    DSEMI
-/*      '&&'      '||'     ';;'    */
+// token: {<, >, <<, >>, |, ||, &&, *, ', ", (, ), WORD}
+// { *, ', ", (, ), &&, ||}는 따로 parsing
 
-
-%token  DLESS  DGREAT  LESSAND  GREATAND  LESSGREAT  DLESSDASH
-/*      '<<'   '>>'    '<&'     '>&'      '<>'       '<<-'   */
-
-
-// %token  CLOBBER
-// /*      '>|'   */
-
-
-/* The following are the reserved words. */
-
-
-// %token  If    Then    Else    Elif    Fi    Do    Done
-// /*      'if'  'then'  'else'  'elif'  'fi'  'do'  'done'   */
-
-
-// %token  Case    Esac    While    Until    For
-// /*      'case'  'esac'  'while'  'until'  'for'   */
-
-
-/* These are reserved words, not operator tokens, and are
-   recognized when reserved words are recognized. */
-
-
-// %token  Lbrace    Rbrace    Bang
-// /*      '{'       '}'       '!'   */
-
-
-// %token  In
-// /*      'in'   */
+%token  WORD         // 예약어
+%token  AND_IF    OR_IF    
+/*      '&&'      '||'   */
+%token  DLESS  DGREAT  
+/*      '<<'   '>>'      */
+%token PIPE	PAREN_L PAREN_R REDIRECT_L REDIRECT_R
+/*      '|'   '('     ')'      '<'        '>'     */
 
 complete_commands	::= complete_commands and_or
 					| and_or
@@ -46,13 +18,13 @@ and_or           	::= pipe_sequence
 					| and_or OR_IF pipe_sequence
                  	;
 pipe_sequence    	::=	command 
-					| pipe_sequence '|' command
+					| pipe_sequence PIPE command
                  	;
 command				::= simple_command 
 					| subshell 
 					| subshell redirect_list
 					;
-subshell			::= '(' term ')'
+subshell			::= PAREN_L term PAREN_R
 					;
 term				::= term and_or 
 					| and_or
@@ -81,8 +53,8 @@ redirect_list		::=               io_redirect
 io_redirect			::=           io_file 
 					|           io_here 
 					;
-io_file				::= '<'       filename 
-					| '>'       filename 
+io_file				::= REDIRECT_L   filename 
+					| REDIRECT_R     filename 
 					| DGREAT    filename
 					;
 filename			::= WORD                     
