@@ -1,3 +1,9 @@
+/*
+left factoring이 필요한 nonsignal의 공통항
+-> and_or, subshell, cmd_prefix, cmd_name, cmd_suffix, 
+
+*/
+
 list ::= pipeline conditional
 
 conditional ::= AND pipeline conditional

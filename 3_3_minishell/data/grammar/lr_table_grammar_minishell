@@ -5,12 +5,13 @@
 #  ps | cat >> log.txt << LIMIT | cat < log.txt > tmp.txt 
 #  WORD PIPE WORD DGREAT WORD DLESS WORD PIPE WORD LESS WORD GREAT WORD
 
+ls ads.txt
 
 S' -> pipe_sequence
 pipe_sequence   -> simple_command
 pipe_sequence   -> pipe_sequence PIPE simple_command
 
-simple_command  -> cmd_prefix cmd_word cmd_suffix 
+simple_command  -> cmd_prefix cmd_word cmd_suffix
 simple_command  -> cmd_prefix cmd_word 
 simple_command  -> cmd_prefix 
 simple_command  -> cmd_name cmd_suffix 

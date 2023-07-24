@@ -1,0 +1,59 @@
+; complete_commands -> complete_commands and_or | and_or
+
+; ?
+complete_commands -> pipe_sequence and_or
+
+and_or -> AND_IF pipe_sequence and_or
+and_or -> OR_IF pipe_sequence and_or
+and_or -> empty
+
+pipe_sequence -> command fcommand
+
+fcommand -> PIPE pipe_sequence
+fcommand -> empty
+
+command -> simple_command 
+command -> subshell fsubshell
+
+fsubshell -> redirect_list
+fsubshell -> empty
+
+subshell -> PAREN_L term PAREN_R
+
+term -> term and_or
+term -> and_or
+
+simple_command -> cmd_prefix fcmd_prefix
+simple_command -> WORD fword
+
+fcmd_prefix -> WORD fword
+fcmd_prefix -> empty
+
+fword -> cmd_suffix
+fword -> empty
+
+cmd_prefix -> io_redirect 
+cmd_prefix -> cmd_prefix io_redirect
+
+cmd_suffix -> io_redirect cmd_suffix_null
+cmd_suffix -> WORD cmd_suffix_null
+
+cmd_suffix_null -> io_redirect cmd_suffix_null
+cmd_suffix_null -> WORD cmd_suffix_null
+cmd_suffix_null -> empty 
+
+redirect_list -> io_redirect 
+redirect_list -> redirect_list io_redirect
+
+io_redirect -> io_file 
+io_redirect -> io_here
+
+io_file -> REDIRECT_L filename 
+io_file -> REDIRECT_R filename 
+io_file -> DGREAT filename
+
+filename -> WORD
+
+io_here -> DLESS here_end
+
+here_end -> WORD
