@@ -1,6 +1,7 @@
 {
 	"files.associations": {
 		"builtins.h": "c",
-		"expansion.h": "c"
+		"expansion.h": "c",
+		"minishell.h": "c"
 	}
 }

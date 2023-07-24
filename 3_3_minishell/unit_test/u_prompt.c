@@ -3,7 +3,8 @@
 
 int main()
 {
-	int a = 3000;
-	a = a + 3;
+	printf("\e[m\e[1;32m❯ \e[mhello\n");
+	printf("hello\n");
+	
 	return (0);
 }

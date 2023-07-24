@@ -10,25 +10,9 @@
 %token PIPE	PAREN_L PAREN_R REDIRECT_L REDIRECT_R
 /*      '|'   '('     ')'      '<'        '>'     */
 
-complete_commands	::= complete_commands and_or
-					| and_or
-               		;
-and_or           	::= pipe_sequence 
-					| and_or AND_IF pipe_sequence 
-					| and_or OR_IF pipe_sequence
+pipe_sequence    	::=	simple_command 
+					| pipe_sequence PIPE simple_command
                  	;
-pipe_sequence    	::=	command 
-					| pipe_sequence PIPE command
-                 	;
-command				::= simple_command 
-					| subshell 
-					| subshell redirect_list
-					;
-subshell			::= PAREN_L term PAREN_R
-					;
-term				::= term and_or 
-					| and_or
-					;
 simple_command		::= cmd_prefix cmd_word cmd_suffix 
 					| cmd_prefix cmd_word
 					| cmd_prefix
@@ -46,9 +30,6 @@ cmd_suffix			::=            io_redirect
 					| cmd_suffix io_redirect 
 					|            WORD 
 					| cmd_suffix WORD
-					;
-redirect_list		::=               io_redirect 
-					| redirect_list io_redirect
 					;
 io_redirect			::=           io_file 
 					|           io_here 

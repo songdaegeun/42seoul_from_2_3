@@ -29,6 +29,7 @@
 		"stdbool.h": "c",
 		"minishell_grammar": "c",
 		"minishell_grammar_editlog": "c",
-		"bash_grammar": "c"
+		"bash_grammar": "c",
+		"grammar_minishell_editlog": "c"
 	}
 }

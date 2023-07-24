@@ -7,11 +7,11 @@
 // %token  NEWLINE			// 개행
 // %token  IO_NUMBER		// IO_NUMBER>
 
-%token  AND_IF    OR_IF    DSEMI
+// %token  AND_IF    OR_IF    DSEMI
 /*      '&&'      '||'     ';;'    */
 
 
-%token  DLESS  DGREAT  LESSAND  GREATAND  LESSGREAT  DLESSDASH
+%token  DLESS  DGREAT  // LESSAND  GREATAND  LESSGREAT  DLESSDASH
 /*      '<<'   '>>'    '<&'     '>&'      '<>'       '<<-'   */
 
 
@@ -44,33 +44,33 @@
 // program				::= newline_list complete_commands newline_list 
 // 					| newline_list
 //					;
-complete_commands	::= complete_commands and_or
-					| and_or
+// complete_commands	::= complete_commands and_or
+// 					| and_or
                		;
 // complete_command ::= and_or
 //                  ;
-and_or           	::= pipe_sequence 
-					| and_or AND_IF pipe_sequence 
-					| and_or OR_IF pipe_sequence
+// and_or           	::= pipe_sequence 
+// 					| and_or AND_IF pipe_sequence 
+// 					| and_or OR_IF pipe_sequence
                  	;
 // pipeline         ::=      pipe_sequence
 //                  ;
-pipe_sequence    	::=	command 
-					| pipe_sequence '|' command
+pipe_sequence    	::=	simple_command 
+					| pipe_sequence '|' simple_command
                  	;
-command				::= simple_command 
-					| subshell 
-					| subshell redirect_list
-					;
+// command				::= simple_command 
+// 					| subshell 
+// 					| subshell redirect_list
+// 					;
 // compound_command	::= subshell 
 // 					;
-subshell			::= '(' term ')'
-					;
+// subshell			::= '(' term ')'
+// 					;
 // compound_list		::= term 
 //                 	;
-term				::= term and_or 
-					| and_or
-					;
+// term				::= term and_or 
+// 					| and_or
+// 					;
 // for_clause       ::= For name                                      do_group | For name                       sequential_sep do_group | For name newline_list in          sequential_sep do_group | For name newline_list in wordlist sequential_sep do_group
 //                  ;
 // name             ::= NAME                   
@@ -120,7 +120,7 @@ simple_command		::= cmd_prefix cmd_word cmd_suffix
 cmd_name			::= WORD                   
 					;
 cmd_word			::= WORD                  
-                ;
+					;
 cmd_prefix			::=            io_redirect 
 					| cmd_prefix io_redirect 
 					;
@@ -129,9 +129,9 @@ cmd_suffix			::=            io_redirect
 					|            WORD 
 					| cmd_suffix WORD
 					;
-redirect_list		::=               io_redirect 
-					| redirect_list io_redirect
-					;
+// redirect_list		::=               io_redirect 
+// 					| redirect_list io_redirect
+// 					;
 io_redirect			::=           io_file 
 					|           io_here 
 					;
