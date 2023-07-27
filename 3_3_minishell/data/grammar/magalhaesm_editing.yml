@@ -1,0 +1,54 @@
+cat 
+ls -a -l 
+cat < a.txt
+ls > a.txt
+a.txt < ls
+a.txt << ls
+
+( ) && || 
+| 
+> < >> << WORD 
+
+list ::= pipeline conditional
+
+conditional ::= AND pipeline conditional
+conditional ::= OR pipeline conditional
+conditional ::= empty
+
+pipeline ::= command pipeline_null
+
+command ::= simple_cmd
+command ::= ssh io_redirect_star
+
+pipeline_null ::= PIPE pipeline
+pipeline_null ::= empty
+
+ssh ::= LBRACE list RBRACE
+
+simple_cmd ::= WORD io_redirect_or_word_star
+simple_cmd ::= io_redirect_dagger io_redirect_dg_after_simple_cmd
+
+
+io_redirect_dg_after_simple_cmd ::= WORD io_redirect_or_word_star
+io_redirect_dg_after_simple_cmd ::= empty
+
+io_redirect_or_word_dagger ::= io_redirect io_redirect_or_word_star
+io_redirect_or_word_dagger ::= WORD io_redirect_or_word_star
+
+io_redirect_or_word_star ::= io_redirect io_redirect_or_word_star
+io_redirect_or_word_star ::= WORD io_redirect_or_word_star
+io_redirect_or_word_star ::= empty
+
+io_redirect_dagger ::= io_redirect io_redirect_star
+
+io_redirect_star ::= io_redirect io_redirect_star
+io_redirect_star ::= empty
+
+io_redirect ::= io_file
+io_redirect ::= io_here
+
+io_file ::= LESS WORD
+io_file ::= GREAT WORD
+io_file ::= DGREAT WORD
+
+io_here ::= DLESS WORD
