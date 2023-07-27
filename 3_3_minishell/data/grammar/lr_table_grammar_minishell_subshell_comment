@@ -36,8 +36,16 @@ test case: ((cat && echo "hi1") << LIMIT && echo "hi2")
 결론: 문법은 lr_table_grammar_minishell을 따른다.
 */
 
+; cmd_suffix는
+; 좌순환 제거와 left factoring이 모두 필요한 생성규칙임.
+; factoring이후의 symbol의 first가 LHS의 first와 일치할 경우,
+; factoring으로 생겨나는 생성규칙을 약간 변형시키면서,
+; 원래 생성규칙에 있는 좌순환을 없앨 수 있는것같음.
+; 그럼 GNF가 됨.
+
 ; 좌순환 제거필요
 ; first, follow학습하면 될 거같음.
+
 complete_commands -> complete_commands and_or
 complete_commands -> and_or
 
@@ -70,11 +78,6 @@ cmd_word -> WORD
 cmd_prefix -> io_redirect 
 cmd_prefix -> cmd_prefix io_redirect
 
-; 좌순환 제거와 left factoring이 모두 필요한 생성규칙임.
-; factoring이후의 symbol의 first가 LHS의 first와 일치할 경우,
-; factoring으로 생겨나는 생성규칙을 약간 변형시키면서,
-; 원래 생성규칙에 있는 좌순환을 없앨 수 있는것같음.
-; 그럼 GNF가 됨.
 cmd_suffix -> io_redirect 
 cmd_suffix -> cmd_suffix io_redirect 
 cmd_suffix -> WORD 
