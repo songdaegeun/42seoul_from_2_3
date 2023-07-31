@@ -6,7 +6,7 @@
 /*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/22 11:04:58 by yde-goes          #+#    #+#             */
-/*   Updated: 2023/07/22 01:25:30 by sdg              ###   ########.fr       */
+/*   Updated: 2023/07/31 16:10:29 by sdg              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 
 # include "libft.h"
 # include "helpers.h"
-# define PATH_MAX 50
+# define PATH_MAX 1024
 typedef struct s_regex
 {
 	size_t	eval_size;

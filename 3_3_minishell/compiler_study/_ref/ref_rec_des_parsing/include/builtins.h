@@ -6,7 +6,7 @@
 /*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 14:32:01 by yde-goes          #+#    #+#             */
-/*   Updated: 2023/07/22 01:25:07 by sdg              ###   ########.fr       */
+/*   Updated: 2023/07/31 16:10:39 by sdg              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 # include "helpers.h"
 
 # define NEW_LINE "-n"
-# define PATH_MAX 50
+# define PATH_MAX 1024
 
 typedef int	(*t_builtin)(char **args);
 
