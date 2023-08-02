@@ -5,6 +5,9 @@
 		"minishell.h": "c",
 		"complex": "c",
 		"istream": "c",
-		"exec.h": "c"
+		"exec.h": "c",
+		"__node_handle": "c",
+		"libft.h": "c",
+		"events.h": "c"
 	}
 }
