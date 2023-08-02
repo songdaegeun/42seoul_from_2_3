@@ -6,7 +6,7 @@
 /*   By: dasong <dasong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/04 18:03:29 by mdias-ma          #+#    #+#             */
-/*   Updated: 2023/08/02 15:15:53 by dasong           ###   ########.fr       */
+/*   Updated: 2023/08/02 15:16:50 by dasong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	exec_subshell(t_node *node, t_context *ctx)
 {
 	int			pid;
-	int			saved_fd[2];
+	// int			saved_fd[2];
 	t_node		*list;
 	t_context	aux_ctx;
 
