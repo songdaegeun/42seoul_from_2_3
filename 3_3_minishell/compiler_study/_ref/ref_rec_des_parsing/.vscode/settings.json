@@ -4,6 +4,7 @@
 		"expansion.h": "c",
 		"minishell.h": "c",
 		"complex": "c",
-		"istream": "c"
+		"istream": "c",
+		"exec.h": "c"
 	}
 }
