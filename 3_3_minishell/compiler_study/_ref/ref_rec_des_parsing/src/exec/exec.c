@@ -6,7 +6,7 @@
 /*   By: dasong <dasong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/13 11:46:14 by mdias-ma          #+#    #+#             */
-/*   Updated: 2023/08/02 15:11:37 by dasong           ###   ########.fr       */
+/*   Updated: 2023/08/02 15:26:48 by dasong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "events.h"
 
 static void	report_sigterm(int wstatus);
+static void	set_wstatus(int wstatus, t_context *ctx);
 
 t_bool	execute(t_node *root)
 {
@@ -80,7 +81,7 @@ void	reaper(t_context *ctx)
 	set_wstatus(wstatus, ctx);
 }
 
-void	set_wstatus(int wstatus, t_context *ctx)
+static void	set_wstatus(int wstatus, t_context *ctx)
 {
 	if (WIFEXITED(wstatus))
 		ctx->retcode = WEXITSTATUS(wstatus);

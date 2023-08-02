@@ -6,7 +6,7 @@
 /*   By: dasong <dasong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/05 10:56:51 by mdias-ma          #+#    #+#             */
-/*   Updated: 2023/08/02 15:11:14 by dasong           ###   ########.fr       */
+/*   Updated: 2023/08/02 15:25:39 by dasong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,7 @@ void	exec_heredoc(t_node *node, t_context *ctx)
 {
 	int		pid;
 	char	delim[DELIMLEN];
-	int wstatus;
-	
+
 	set_delimiter(node, delim);
 	pid = pfork();
 	if (pid == FORKED_CHILD)
@@ -34,10 +33,8 @@ void	exec_heredoc(t_node *node, t_context *ctx)
 		exit(EXIT_SUCCESS);
 	}
 	heredoc_parent_sighandler();
-	// enqueue(pid, ctx);
-	// reaper(ctx);
-	waitpid(pid, &wstatus, 0);
-	set_wstatus(wstatus, ctx);
+	enqueue(pid, ctx);
+	reaper(ctx);
 	wait_user_signals();
 	if (ctx->retcode == EXIT_SUCCESS)
 	{

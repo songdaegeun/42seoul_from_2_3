@@ -6,7 +6,7 @@
 /*   By: dasong <dasong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/13 11:45:35 by mdias-ma          #+#    #+#             */
-/*   Updated: 2023/08/02 15:11:45 by dasong           ###   ########.fr       */
+/*   Updated: 2023/08/02 15:26:12 by dasong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,5 @@ void	msh_clean(void);
 void	here_doc(char *delimiter);
 void	set_fd_close(int fd);
 int		*get_fd_close(void);
-
-void	set_wstatus(int wstatus, t_context *ctx);
 
 #endif
