@@ -2,6 +2,7 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include <readline/readline.h>
+#include <sys/wait.h>
 
 void	ft_putendl_fd(char *s, int fd);
 size_t	ft_strlen(const char *s);
@@ -19,22 +20,25 @@ int main(int argc, char **argv, char **envp) {
 
     pid = fork();
     if (pid == 0) {
-        fd = open("tmp", O_WRONLY | O_CREAT | O_TRUNC, 0644);
-        while (1) {
-			// read(0, buffer, 1);            
-			// write(fd, buffer, 1);
-			
-            input = readline("dasong > ");
-			ft_putendl_fd(input, fd);
-        }
+		execve("/bin/cat", arr, envp);
+		printf("This line will not be printed.\n");
     }
     else {
 		pid = fork();
 		if (pid == 0) {
-			execve("/bin/cat", arr, envp);
-       		printf("This line will not be printed.\n");
+			fd = open("tmp", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+			while (1) {
+				// read(0, buffer, 1);            
+				// write(fd, buffer, 1);
+				
+				input = readline("> ");
+				ft_putendl_fd(input, fd);
+			}
 		}
-        while(1);
+		int	wstatus;
+        // heredoc_parent_sighandler();
+		waitpid(pid, &wstatus, 0);
+		// wait_user_signals();
     }
 }
 
