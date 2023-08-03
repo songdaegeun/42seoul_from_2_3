@@ -12,12 +12,12 @@ LOG   := printf "[$(CYAN)INFO$(RESET)] %s\n"
 ##                                DIRECTORIES                                 ##
 ################################################################################
 
-# /Users/dasong/.brew/opt/readline
-# /opt/homebrew/opt/readline
 
 OBJ_DIR   := obj
 LIBFT_DIR := libft
-INC_DIRS  := include $(LIBFT_DIR) /Users/dasong/.brew/opt/readline/include
+# INC_DIRS  := include $(LIBFT_DIR) /Users/dasong/.brew/opt/readline/include
+INC_DIRS  := include $(LIBFT_DIR) /opt/homebrew/opt/readline/include
+
 SRC_DIRS  := table signals builtins scanner parser parser/grammar debug
 SRC_DIRS  += helpers exec expansion
 SRC_DIRS  := $(addprefix src/, $(SRC_DIRS))
@@ -53,7 +53,8 @@ OBJS := $(addprefix $(OBJ_DIR)/, $(SOURCES:.c=.o))
 ################################################################################
 
 CFLAGS  := -Wall -Werror -Wextra -g $(addprefix -I,$(INC_DIRS))
-LDFLAGS := -L $(LIBFT_DIR) -L/Users/dasong/.brew/opt/readline/lib -lft -lreadline
+# LDFLAGS := -L $(LIBFT_DIR) -L/Users/dasong/.brew/opt/readline/lib -lft -lreadline
+LDFLAGS := -L $(LIBFT_DIR) -L/opt/homebrew/opt/readline/lib -lft -lreadline
 
 all: $(NAME)
 

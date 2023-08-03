@@ -1,17 +1,18 @@
 ## unit_test
-NAME = $(patsubst %.c, %, $(SRCS))
+# NAME = $(patsubst %.c, %, $(SRCS))
+NAME = test
 
 ## directory
 HEADERS = 
-SRCS = rl_clear_history.c
+SRCS = test4.c
 OBJS = $(SRCS:.c=.o)
 
 ## desktop env 
-# INC_DIRS = /opt/homebrew/opt/readline/include
-# LIB_DIRS = /opt/homebrew/opt/readline/lib
+INC_DIRS = /opt/homebrew/opt/readline/include
+LIB_DIRS = /opt/homebrew/opt/readline/lib
 
-INC_DIRS = /Users/dasong/.brew/opt/readline/include
-LIB_DIRS = /Users/dasong/.brew/opt/readline/lib
+# INC_DIRS = /Users/dasong/.brew/opt/readline/include
+# LIB_DIRS = /Users/dasong/.brew/opt/readline/lib
 
 ## compile
 CC=	cc
