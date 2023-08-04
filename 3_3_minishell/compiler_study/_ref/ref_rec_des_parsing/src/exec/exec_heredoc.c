@@ -6,7 +6,7 @@
 /*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/05 10:56:51 by mdias-ma          #+#    #+#             */
-/*   Updated: 2023/08/03 23:50:20 by sdg              ###   ########.fr       */
+/*   Updated: 2023/08/04 11:53:17 by sdg              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	exec_heredoc(t_node *node, t_context *ctx)
 	wait_user_signals();
 	if (ctx->retcode == EXIT_SUCCESS)
 	{
-		ctx->fd[STDIN_FILENO] = open(HEREDOC_TEMPFILE, O_RDONLY, 0644);
+		ctx->fd[STDIN_FILENO] = open(ctx->heredoc_file_name[ctx->heredoc_file_idx++], O_RDONLY, 0644);
 		exec_node(node->data.pair.left, ctx);
 		close(ctx->fd[STDIN_FILENO]);
 	}

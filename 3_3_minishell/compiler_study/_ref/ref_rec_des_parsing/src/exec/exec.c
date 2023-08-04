@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasong <dasong@student.42.fr>              +#+  +:+       +#+        */
+/*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/13 11:46:14 by mdias-ma          #+#    #+#             */
-/*   Updated: 2023/08/02 17:47:22 by dasong           ###   ########.fr       */
+/*   Updated: 2023/08/04 12:02:47 by sdg              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,9 @@ t_bool	execute(t_node *root)
 	ctx.quit = FALSE;
 	ctx.proc = 0;
 	ctx.pipeline = FALSE;
+	char *file_name[16] = {"heredoc_0", "heredoc_1", "heredoc_2", "heredoc_3", "heredoc_4", "heredoc_5", "heredoc_6", "heredoc_7", "heredoc_8", "heredoc_9", "heredoc_10", "heredoc_11", "heredoc_12", "heredoc_13", "heredoc_14", "heredoc_15"};
+	ctx.heredoc_file_name = file_name;
+	ctx.heredoc_file_idx = 0;
 	ft_memset(ctx.pid, 0, PIPE_LIMIT * sizeof(int));
 	save_tree_ref(root);
 	exec_node(root, &ctx);

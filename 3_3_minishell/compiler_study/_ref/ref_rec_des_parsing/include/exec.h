@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasong <dasong@student.42.fr>              +#+  +:+       +#+        */
+/*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/13 11:45:35 by mdias-ma          #+#    #+#             */
-/*   Updated: 2023/08/02 17:47:25 by dasong           ###   ########.fr       */
+/*   Updated: 2023/08/04 11:59:16 by sdg              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ typedef struct s_context {
 	int		pid[PIPE_LIMIT];
 	int		fd_close;
 	int		proc;
+	int		heredoc_file_idx;
+	char **heredoc_file_name;
 	t_byte	retcode;
 	t_bool	error;
 	t_bool	quit;
@@ -63,7 +65,7 @@ void	save_tree_ref(t_node *root);
 t_node	**get_tree_ref(void);
 void	msh_clean(void);
 
-void	here_doc(char *delimiter);
+void	here_doc(char *delimiter, t_scanner *scanner);
 void	set_fd_close(int fd);
 int		*get_fd_close(void);
 

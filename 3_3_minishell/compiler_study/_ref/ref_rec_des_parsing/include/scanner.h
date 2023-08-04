@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   scanner.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mdias-ma <mdias-ma@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 20:30:47 by mdias-ma          #+#    #+#             */
-/*   Updated: 2022/11/28 18:34:06 by mdias-ma         ###   ########.fr       */
+/*   Updated: 2023/08/04 12:00:02 by sdg              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ typedef struct s_scanner
 {
 	t_iter	iter;
 	t_token	next;
+	int		heredoc_file_idx;
+	char **heredoc_file_name;
 }	t_scanner;
 
 t_scanner	init_scanner(const char *source);

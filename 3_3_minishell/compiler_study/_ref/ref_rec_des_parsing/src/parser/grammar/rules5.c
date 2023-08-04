@@ -6,7 +6,7 @@
 /*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/12 20:27:47 by mdias-ma          #+#    #+#             */
-/*   Updated: 2023/08/03 23:52:33 by sdg              ###   ########.fr       */
+/*   Updated: 2023/08/04 12:06:41 by sdg              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,14 +40,19 @@ t_node	*io_here(t_scanner *scanner)
 	if (match(TOKEN_DLESS, scanner)) {
 		t_node	*node;
 		node = mkio(HERE_DOC, TOKEN_WORD, scanner);
-				
+		
 		#define DELIMLEN 1024
 
 		char	delim[DELIMLEN];
 
+		if(scanner->heredoc_file_idx >= 16) {
+			printf("bash: maximum here-document count exceeded\n");
+			// memory release
+			exit(1);
+		}
 		set_delimiter(node, delim);
 		// printf("del: %s\n",delim);
-		here_doc(delim);
+		here_doc(delim, scanner);
 		return (node);
 	}
 		

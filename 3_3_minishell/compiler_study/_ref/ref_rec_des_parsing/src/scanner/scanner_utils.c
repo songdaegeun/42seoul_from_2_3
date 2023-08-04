@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   scanner_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mdias-ma <mdias-ma@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 20:36:07 by mdias-ma          #+#    #+#             */
-/*   Updated: 2022/11/24 15:58:09 by mdias-ma         ###   ########.fr       */
+/*   Updated: 2023/08/04 12:03:21 by sdg              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,13 @@
 t_scanner	init_scanner(const char *source)
 {
 	t_scanner	self;
+	char *file_name[16] = {"heredoc_0", "heredoc_1", "heredoc_2", "heredoc_3", "heredoc_4", "heredoc_5", "heredoc_6", "heredoc_7", "heredoc_8", "heredoc_9", "heredoc_10", "heredoc_11", "heredoc_12", "heredoc_13", "heredoc_14", "heredoc_15"};
 
 	self.iter.start = source;
 	self.iter.current = source;
 	self.next = scan_token(&self);
+	self.heredoc_file_name = file_name;
+	self.heredoc_file_idx = 0;
 	return (self);
 }
 

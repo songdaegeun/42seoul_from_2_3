@@ -6,7 +6,7 @@
 /*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/08 15:51:04 by mdias-ma          #+#    #+#             */
-/*   Updated: 2023/08/03 21:26:10 by sdg              ###   ########.fr       */
+/*   Updated: 2023/08/04 12:02:02 by sdg              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,13 @@
 static t_bool	delimiter(char *word, char *line);
 static t_bool	next_line(char *input, char *word);
 
-void	here_doc(char *delimiter)
+void	here_doc(char *delimiter, t_scanner *scanner)
 {
 	char	*input;
 	char	*expanded;
 	int		fd;
 
-	fd = open(HEREDOC_TEMPFILE, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	fd = open(scanner->heredoc_file_name[scanner->heredoc_file_idx++], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	set_fd_close(fd);
 	wait_heredoc_signals();
 	while (TRUE)
