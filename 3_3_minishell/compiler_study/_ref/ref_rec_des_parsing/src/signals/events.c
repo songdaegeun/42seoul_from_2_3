@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   events.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 16:43:36 by ygorgsena         #+#    #+#             */
-/*   Updated: 2023/01/08 19:38:27 by mdias-ma         ###   ########.fr       */
+/*   Updated: 2023/08/22 23:04:20 by sdg              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,5 +40,8 @@ void	exit_heredoc(int sig)
 	set_exit_status(sig);
 	ft_putendl_fd("", STDOUT_FILENO);
 	msh_clean();
-	exit(sig);
+	
+	set_heredoc_exit_flag(1);
+	set_tmp_stdin_fd(dup(0));
+	close(STDIN_FILENO);
 }

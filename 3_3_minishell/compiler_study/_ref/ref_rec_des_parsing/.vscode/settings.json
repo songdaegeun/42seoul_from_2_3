@@ -9,6 +9,11 @@
 		"__node_handle": "c",
 		"libft.h": "c",
 		"events.h": "c",
-		"type_traits": "c"
+		"type_traits": "c",
+		"system_error": "c",
+		"parser.h": "c",
+		"stdio.h": "c",
+		"signal.h": "c",
+		"scanner.h": "c"
 	}
 }

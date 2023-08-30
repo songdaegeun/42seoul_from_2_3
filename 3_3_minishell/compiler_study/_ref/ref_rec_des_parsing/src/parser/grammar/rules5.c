@@ -6,7 +6,7 @@
 /*   By: sdg <sdg@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/12 20:27:47 by mdias-ma          #+#    #+#             */
-/*   Updated: 2023/08/04 12:06:41 by sdg              ###   ########.fr       */
+/*   Updated: 2023/08/07 01:20:56 by sdg              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ t_node	*io_here(t_scanner *scanner)
 	if (match(TOKEN_DLESS, scanner)) {
 		t_node	*node;
 		node = mkio(HERE_DOC, TOKEN_WORD, scanner);
-		
+
 		#define DELIMLEN 1024
 
 		char	delim[DELIMLEN];
@@ -53,9 +53,14 @@ t_node	*io_here(t_scanner *scanner)
 		set_delimiter(node, delim);
 		// printf("del: %s\n",delim);
 		here_doc(delim, scanner);
+		if (*get_heredoc_exit_flag() == 1)
+		{
+			dup2(*get_tmp_stdin_fd(), STDIN_FILENO);
+			close(*get_tmp_stdin_fd());
+			return (NULL);
+		}
 		return (node);
 	}
-		
 	return (NULL);
 }
 /************************************************************************************/
@@ -97,4 +102,28 @@ char	*quote_removal(char *word)
 	ft_lstclear(&list, free);
 	return (chunk);
 }
+
+int *get_heredoc_exit_flag(void)
+{
+	static int heredoc_exit_flag;
+	return (&heredoc_exit_flag);
+}
+
+int *get_tmp_stdin_fd(void)
+{
+	static int tmp_stdin_fd;
+	return (&tmp_stdin_fd);
+}
+
+void set_heredoc_exit_flag(int flag)
+{
+	*get_heredoc_exit_flag() = flag;
+}
+
+void set_tmp_stdin_fd(int fd)
+{
+	*get_tmp_stdin_fd() = fd;
+}
+
+
 /************************************************************************************/
