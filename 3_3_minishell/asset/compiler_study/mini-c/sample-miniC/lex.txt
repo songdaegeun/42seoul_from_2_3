@@ -1,0 +1,173 @@
+Compilers Lecture# 3
+
+               lex: The Lexical Analyser Generator: Overview
+
+---------------------------------------------------------------------------
+
+lex is a translator which accepts a lex source program and generates a C
+program which can be run through a compiler to produce a standalone lexical
+analyser (scanner). Lex uses regular expressions to match tokens in the
+input string, which are defined in the source file, prog.l:
+
+ prog.l -->  lex  -->  lex.yy.c
+
+lex.yy.c  -->   cc   -->   a.out
+
+   input  -->  a.out --> tokens
+  stream
+
+Command line usage:
+
+    lex   prog.l
+    cc  lex.yy.c  -ll
+    ./a.out  <  input_stream
+
+---------------------------------------------------------------------------
+
+                              Lex Source Code
+
+A lex program has three parts:
+
+declarations
+
+%%
+
+translation rules
+
+%%
+
+auxiliary procedures
+
+The declarations section contains:
+
+   * C code, defined between a %{ and %} pair of delimiters. These are
+     copied directly into lex.yy.c    eg:
+
+          %{
+          #include <stdio.h>
+          %}
+
+   * declarations of variables and regular definitions which can be used in
+     the translation rules section. eg.:
+
+          digit     [0-9]
+          letter    [A-Za-z]
+          ident     {letter}({letter}|{digit})*
+
+---------------------------------------------------------------------------
+
+                             Translation Rules
+
+The Translation rules are statements of the form:
+
+   p1 { action 1 }
+   p2 { action 2 }
+        :
+        :
+
+   pn { action n }
+
+Each of the p is a regular expression and the associated action is taken
+when it matches a lexeme in the input.
+
+The auxiliary procedures section contain C language routines which are
+called in the actions parts. They are copied directly into lex.yy.c
+
+A procedure called main() can be used to produce a standalone program
+without the -ll switch.
+---------------------------------------------------------------------------
+
+                      Example lex Source File, part 1.
+
+%{
+#include <stdio.h>
+%}
+digit   [0-9]
+letter  [A-Za-z]
+ident   {letter}({letter}|{digit})*
+%%
+"if"    {printf("keyword 'if'\n"); }
+while   {printf("keyword 'while'\n")
+;}
+{ident} {printf("identifier\n"); }
+.       ECHO;
+%%
+
+---------------------------------------------------------------------------
+
+                          lex Regular Expressions
+
+These are substantially the same as those already introduced (thank
+goodness)
+
+   * [ ] class of characters. Eg. [Bb] means either of B or b. The -
+     character defines a range.
+   * ? zero or one instance of
+   * * zero or more instances of
+   * + one or more instances of
+   * . (dot) matches any character except the newline (\n)
+   * \ escapes the special meaning of single metasymbol, such as those
+     above.
+   * " " string - characters taken as presented
+     ----------------------------------------------------------------------
+
+                            lex Global Variables
+
+yytext - a pointer to the first character of the current lexeme - the one
+which generated a regular expression match.
+
+yyleng - an integer giving the length of the current lexeme
+
+yymore() & yyless(n) - pushes next match or removes n characters from the
+yytext string. (Enables a programmer to match patterns not expressible by a
+single regular expression)
+
+yylval - yacc variable used to pass the value of a matched token back into
+yacc.
+---------------------------------------------------------------------------
+
+                          lex Auxiliary Functions
+
+yylex() - is the lexical analyser function part of lex.yy.c When lex is
+called as a function from the parser, this is the name of the called
+function.
+
+input() - retrieves a single character, returns 0 on default.
+
+output( c ) - write a single character to the output.
+
+unput( c ) - put a single character back on the input to be reread.
+
+yywrap() - cleans up on EOF
+
+lex provides default functions for these which read and write to/from
+stdio, so that a minimal lex program can operate as a UNIX filter.
+---------------------------------------------------------------------------
+
+                      Example lex Source File, part 2.
+
+%{
+unsigned cc=0, wc=0, lc=0;
+%}
+
+word      [^ \t\n]*
+eol       \n
+
+%%
+
+{word}    {wc++; cc += yyleng;}
+{eol}     {cc++; lc++;}
+.         cc++;
+
+%%
+
+main()
+{
+   yylex();
+   printf("%d %d %d", lc, wc, cc);
+}
+
+yywrap()
+{
+   return(1);
+}

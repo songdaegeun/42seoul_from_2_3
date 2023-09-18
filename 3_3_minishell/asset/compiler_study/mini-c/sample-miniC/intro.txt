@@ -1,0 +1,158 @@
+CL1 : Introduction To Compilers
+
+---------------------------------------------------------------------------
+
+A compiler is a language translator
+      eg. c (or other HLL) ==> Compiler ==> machine code
+
+Other software tools that solve similar problems:
+
+     assemblers
+     preprocessors
+     text formatters
+     pretty printers
+     interpreters
+
+                  Phases of a compiler (Fig 1.1 - Louden):
+
+                                  [Image]
+
+First 3 phases are ANALYSIS
+
+  1. Lexical Analysis is Scanning
+  2. Syntax Analysis is Parsing
+  3. Semantic Analysis checks meaning
+
+---------------------------------------------------------------------------
+
+1. Lexical Analysis
+
+Source program is read left -> right and top -> bottom.
+
+Separated into tokens. i.e.:
+
+     keywords, operators, identifiers, constants and punctuation symbols
+     such as {} () ;
+
+eg. the statement:
+
+     position = initial + rate * 60
+
+     ==> 7 tokens - spaces are separators so are ignored
+
+---------------------------------------------------------------------------
+
+2. Syntax Analysis
+
+The language tokens are grouped together to form recognisable "phrases" (or
+sentences) of the input statements.
+
+These are represented by a parse tree, usually stored as a standard
+pointer-based structure accessed by the root node.
+
+eg. position := initial + rate * 60
+
+with rules:
+
+  1. Any identifier is an expression
+  2. Any number is an expression
+  3. If e1 and e2 are expressions, then so are:
+
+          e1 + e2
+          e1 * e2
+          ( e1 )
+          Parse Tree:
+
+Context-Free Grammars (CFG) are a formal definition of the language.
+
+   * usually expressed as a set of recursive rules (similar to above)
+
+---------------------------------------------------------------------------
+
+3. Semantic Analysis
+
+Semantics = "meaning"
+
+Uses hierarchical structure of syntax analysis to identify operators and
+operands etc.
+
+eg. type checking
+
+   * eg.1: position := initial + rate * 60
+
+what if initial and rate are reals?
+
+   * eg.2: ensure array subscripts are integer
+        o if not what do you do?
+
+          stop?
+          convert?
+          eg. x := array[int(fnum)]
+
+---------------------------------------------------------------------------
+
+4. Symbol Table
+
+   * Contains a record for each identifier
+   * Fields for attributes
+   * Lexical analyser: builds symbol table
+   * Syntax analyser: fills in attributes, eg. type
+   * Semantic analyser: uses info. in table
+
+---------------------------------------------------------------------------
+
+5. Error detection and Reporting:
+
+Lexical phase:
+
+   * detects tokens that are not part of language
+   * eg. invalid id names such as '1a'
+
+Syntactic phase:
+
+   * detects syntax errors
+   * eg. if x < 22 if y = 5;
+
+Semantic phase:
+
+   * detects operations that do not have meaning
+   * eg. misuse of procedure/function names
+
+Error recovery:
+
+   * Simplest: stop at first error
+   * More general: define how to recover (complex)
+
+          eg. convert type
+          or guess where statement ends
+
+---------------------------------------------------------------------------
+
+6. Code Generation
+
+Something like:
+
+  1. Produce intermediate code by traversing the parse tree
+  2. Perform some optimisation
+  3. Rewrite in assembler or machine language (object code)
+
+eg.    position := initial + rate * 60
+
+After lexical analysis and parsing:
+
+     temp1 := int2real(60)
+     temp2 := id3 * temp1
+     temp3 := id2 + id3
+     id1 := temp3
+
+After optimisation:
+
+     temp1 := id3 * 60.0
+     id1 := id2 + temp1
+
+Final code (something like):
+
+     MOVF id3, ACC
+     MULF #60.0, ACC
+     ADDF id3, ACC
+     MOVF ACC, id1
